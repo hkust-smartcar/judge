@@ -1,11 +1,21 @@
 
+import {xd} from './xd'
+import {xdd} from '../xdd'
+console.log(xd)
+console.log(xdd)
+console.log process:env
+console.log 'xd'
+console.log process:config
 var store = {
 	title: ""
 	items: [
 		{title: "git clone hello-world-imba"}
 		{title: "npm install"}
 		{title: "npm run dev"}
-		{title: "play around"}
+		{title: "yooooo"}
+		{title: "{xd}"}
+		{title: "{xdd}"}
+		{title: "hi"}
 	]
 }
 

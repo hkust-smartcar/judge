@@ -11,8 +11,10 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "start": "imba src/server/index.imba",
-    "dev": "webpack-dev-server --content-base dist/",
+    "start": "npm run build && imba src/server/index.imba",
+    "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run client-dev\"",
+    "server-dev": "cross-env NODE_PATH=src nodemon --watch src/ --exec cross-env NODE_ENV=dev imba src/server/index.imba",
+    "client-dev": "webpack-dev-server --env.NODE_ENV=dev --content-base dist/",
     "build": "webpack",
     "watch": "webpack --watch --progress --colors --display-modules"
   },
@@ -29,5 +31,10 @@
     "imba": "^1.4.0",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "nodemon": "^1.17.4",
+    "concurrently": "4.1.0"
   }
 }

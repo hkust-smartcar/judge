@@ -1,6 +1,7 @@
-# var express = require 'express'
-import express from 'express'
+var express = require 'express'
 let server = express()
+
+console.log process:env.NODE_ENV
 
 server.use(express.static('./dist'))
 

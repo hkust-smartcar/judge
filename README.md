@@ -1,14 +1,21 @@
-# Judger
+# Imba Template
 
-Judging system for corner detection challenge
-
-using imba for both server and client
+imba server and client template, with live server and client reloading, environment separation
 
 ## Getting started
 
 ```bash
 # install dependencies
 npm install
-# start webpack-dev-server and compiler
+# start live client and server development server
 npm run dev
+
+# start production server
+npm start
 ```
+
+## Obtain Environment Configurations
+
+set you environment configurations in `/config.js`
+
+in your code, get back your configs by using `process:config`

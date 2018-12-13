@@ -14,7 +14,9 @@ module.exports = env => ({
 		extensions: [".imba",".js", ".json"]
 	},
 	plugins: [
-		configs(env && env.NODE_ENV || 'production'),
+		new webpack.DefinePlugin({
+			"process.config": JSON.stringify(configs(env && env.NODE_ENV || 'production'))
+		}),
 		new webpack.DefinePlugin({
 			'process.env': JSON.stringify({NODE_ENV:'production',...env})
 		})

@@ -1,5 +1,3 @@
-const webpack = require('webpack')
-
 const configs = {
   dev: {
     MODE: 'dev'
@@ -9,6 +7,4 @@ const configs = {
   }
 }
 
-module.exports = (key = 'production') => new webpack.DefinePlugin({
-  "process.config": JSON.stringify(configs[key])
-})
+module.exports = (key = 'production') => configs[key]

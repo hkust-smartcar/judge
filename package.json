@@ -1,17 +1,18 @@
 {
-  "name": "judger",
-  "description": "Judging system for corner detection challenge",
+  "name": "imba-template",
+  "description": "imba server and client template, with live server and client reloading, environment separation",
   "keywords": [
-    "imba"
+    "imba",
+    "boilerplate"
   ],
   "author": "dipsywong98",
-  "bugs": "https://github.com/somebee/hello-world-imba/issues",
+  "bugs": "https://github.com/dipsywong98/imba-template/issues",
   "version": "1.0.0",
   "engines": {
     "node": ">=6.0.0"
   },
   "scripts": {
-    "start": "npm run build && imba src/server/index.imba",
+    "start": "npm run build && cross-env NODE_ENV=production imba src/server/index.imba",
     "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run client-dev\"",
     "server-dev": "cross-env NODE_PATH=src nodemon --watch src/ --exec cross-env NODE_ENV=dev imba src/server/index.imba",
     "client-dev": "webpack-dev-server --env.NODE_ENV=dev --content-base dist/",

@@ -1,7 +1,10 @@
 var express = require 'express'
+var config = require('../../config')(process:env.NODE_ENV)
+process:config = config
 let server = express()
 
 console.log process:env.NODE_ENV
+console.log process:config
 
 server.use(express.static('./dist'))
 

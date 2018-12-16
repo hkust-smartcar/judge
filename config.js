@@ -1,4 +1,7 @@
 const configs = {
+  common: {
+
+  },
   dev: {
     MODE: 'dev'
   },
@@ -7,4 +10,4 @@ const configs = {
   }
 }
 
-module.exports = (key = 'production') => configs[key]
+module.exports = (key = 'production') => ({...configs.common,...configs[key]})

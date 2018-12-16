@@ -2,7 +2,7 @@
 import {xd} from './xd'
 import {xdd} from '../xdd'
 var io = require 'socket.io-client'
-var socket = io 'localhost:8080'
+var socket = io 'localhost:'+process:config.PORT||8080
 socket.on('c',console:log)
 console.log(xd)
 console.log(xdd)

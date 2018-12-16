@@ -2,7 +2,7 @@ var config = require('../../config')(process:env.NODE_ENV)
 process:config = config
 var express = require('express')
 var app = express()
-var port = process:env.PORT or 8080
+var port = process:config.PORT or 8080
 var s = app.listen(port) do
 	console.log 'server is running on port ' + port
 var server = require('http').createServer(app)

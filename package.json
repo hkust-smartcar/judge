@@ -1,5 +1,5 @@
 {
-  "name": "imba-template",
+  "name": "judge",
   "description": "imba server and client template, with live server and client reloading, environment separation",
   "keywords": [
     "imba",

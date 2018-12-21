@@ -8,27 +8,30 @@ var s = app.listen(port) do
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(s)
 var bodyParser = require('body-parser')
+const passport = require('passport')
+const session = require('express-session')
+const authInit = require('./auth')
 
 def initExpress client
 	app.use(express.static('./dist'))
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({ extended: true }))
+	app.use(session(process:config:passportSession))
+	app.use(passport.initialize());
+	app.use(passport.session());
 	app.all '/*:8081' do |req,res,next|
 		res.header("Access-Control-Allow-Origin", "*")
 		res.header("Access-Control-Allow-Headers", "X-Requested-With")
 		res.header('Content-Type: application/json; charset=utf-8')
 		next()
 	
-	app.get '/' do |req,res|
-		var html = <html>
-			<head>
-				<title> "Imba - Hello World"
-				<meta charset="utf-8">
-				<link rel="stylesheet" href="/dist/index.css" media="screen">
-			<body>
-				<script src="/client.js">
+	app.get '/profile' do |req,res|
+		if(!req:session:passport)
+			res.redirect('/login')
+		console.log(req:session)
+		return res.send(req:session:passport:user:displayName)
 		
-		return res.send html.toString
+	authInit app
 
 def initSocket client
 	io:sockets.on 'connection', do |socket|

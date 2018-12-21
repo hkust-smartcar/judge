@@ -14,7 +14,7 @@
   "scripts": {
     "start": "npm run build && cross-env NODE_ENV=production imba src/server/index.imba",
     "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run client-dev\"",
-    "server-dev": "nodemon --watch src/ --exec cross-env NODE_ENV=dev imba src/server/index.imba",
+    "server-dev": "nodemon --watch src/ --watch src/auth.js --exec cross-env NODE_ENV=dev imba src/server/index.imba",
     "client-dev": "webpack-dev-server --env.NODE_ENV=dev --content-base dist/",
     "build": "webpack",
     "watch": "webpack --watch --progress --colors --display-modules --env.NODE_ENV=dev"
@@ -28,9 +28,13 @@
   },
   "license": "MIT",
   "dependencies": {
+    "chokidar": "^2.0.4",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
     "imba": "^1.4.0",
     "mongodb": "^3.1.10",
+    "passport": "^0.4.0",
+    "passport-openidconnect": "0.0.2",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
     "webpack": "^3.10.0",

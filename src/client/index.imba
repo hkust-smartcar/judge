@@ -17,8 +17,6 @@ if process:config.MODE === 'dev'
 		Imba.setTimeout(1000) do
 			window:location.reload
 
-# var Elements = {'/':Index,'profile':Profile}[window:page || '/']||Index
-
 tag App		
 	def render
 		return

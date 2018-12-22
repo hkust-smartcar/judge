@@ -15,6 +15,10 @@ const init = app => {
   //define routes
   app.get('/login',passport.authenticate('oidc'))
   app.get('/login/oidc/callback', passport.authenticate('oidc', { failureRedirect: '/', successRedirect: '/profile' }))
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
   
   //implement the way passportjs serialize and deserialize a user
   passport.serializeUser(function(user, done) {

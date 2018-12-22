@@ -32,3 +32,5 @@ build/Release
 node_modules
 
 config.js
+
+uploads/

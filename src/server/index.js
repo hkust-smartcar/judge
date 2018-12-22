@@ -1,6 +1,8 @@
 var config = require("../../config")(process.env.NODE_ENV);
 process.config = config;
 var express = require("express");
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
 var app = express();
 var port = process.config.PORT || 8080;
 var s = app.listen(port, () => {
@@ -35,7 +37,6 @@ const sessionMiddleware = session({ ...process.config.passportSession, store });
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
-
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 app.all("*", (req, res, next) => {
@@ -80,10 +81,20 @@ const initExpress = client => {
     });
   });
   app.post("/pull", (req, res) => {
-    exec("git pull origin master && npm i", (...params) => {
+    exec("git pull origin master && npm i && pm2 restart judge", (...params) => {
       res.send(params);
     });
   });
+  app.get('/submit',(req, res) => {
+    return res.render("index.ejs", {
+      user: JSON.stringify(req.session.passport),
+    });
+  });
+  app.post('/submit',upload.array('myfile'),(req,res)=>{
+    console.log('POST submit',req.body)
+    console.log('files',req.files)
+    return res.redirect('/submit')
+  })
   initAuth(app);
 };
 

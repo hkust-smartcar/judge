@@ -101,8 +101,8 @@ const initExpress = client => {
 const initSocket = client => {
   io.sockets.on("connection", socket => {
     console.log("connected", socket.id);
-    let user = socket.request.session.passport.user;
-    if (user != null) {
+    if (socket.request.session.passport != null) {
+      let user = socket.request.session.passport.user;
       // if logged in
       socket.join(user.id); // use user id as room id
       io.to(user.id).emit("name", `Welcome, ${user.displayName}`); // emit user name to channel "name"

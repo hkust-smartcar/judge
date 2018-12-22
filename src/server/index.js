@@ -11,8 +11,24 @@ var io = require('socket.io').listen(s)
 var bodyParser = require('body-parser')
 const passport = require('passport')
 const session = require('express-session')
-const authInit = require('./auth')
 const path = require('path')
+const fs = require('fs')
+const { exec } = require('child_process')
+
+const initAuth = require('./auth')
+const initHotReload = require('./hot-reload')(io)
+
+let loaded = false
+
+app.set('views', path.join(__dirname, '/views'));
+app.set('view engine', 'ejs') 
+app.all('*',(req,res,next)=>{
+  if(!loaded){
+    return res.render('boot')
+  }else{
+    next()
+  }
+}) 
 
 const initExpress = client => {
 	app.use(bodyParser.json())
@@ -21,8 +37,6 @@ const initExpress = client => {
 	app.use(passport.initialize());
 	app.use(passport.session());
 	// console.log(__dirname)
-	app.set('views', path.join(__dirname, '/views'));
-	app.set('view engine', 'ejs') 
 	app.all('/*:8081',(req,res,next)=>{
 		res.header("Access-Control-Allow-Origin", "*")
 		res.header("Access-Control-Allow-Headers", "X-Requested-With")
@@ -33,13 +47,18 @@ const initExpress = client => {
 	app.get('/profile',(req,res)=>{
 		if(!req.session.passport)
 			res.redirect('/login')
-		console.log(req.session)
-		return res.send(req.session.passport.user.displayName)
+		return res.render('index.ejs',{user: JSON.stringify(req.session.passport), page:'profile'})
   })
+	// app.get('/test', (req,res)=>{
+	// 	return res.render('test.ejs',{message: 'hi'})
+  // })
 	app.get('/test', (req,res)=>{
-		return res.render('test.ejs',{message: 'hi'})
+		return res.render('index.ejs',{user: `{"a":123,"b":{"c":"d"}}`,page:'hi'})
   })
-	authInit(app)
+  app.get('/pull', (req,res)=>{
+    exec('git pull origin master && npm i',(...params)=>{res.send(params)})
+  })
+	initAuth(app)
 }
 
 const initSocket = client => {
@@ -72,7 +91,11 @@ const initMongo = async () => {
 const main = async ()=>{
 	var client = await initMongo()
 	initExpress(client)
-	initSocket(client)
+  initSocket(client)
+  if(process.config.MODE === 'dev'){
+    initHotReload()
+  }
+  loaded = true 
 }
 
 main()

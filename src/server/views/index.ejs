@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Hello world</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="index.css" media="screen">
+  </head>
+  <body>
+    <script>
+      <%- user&&'window.user='+user %>
+      <%- page&&`window.page='${page}'` %>
+    </script>
+    <script src="client.js"></script>
+  </body>
+</html>

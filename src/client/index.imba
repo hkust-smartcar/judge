@@ -1,27 +1,17 @@
-
-import {xd} from './xd'
-import {xdd} from '../xdd'
+require 'imba-router'
+import {store} from './lib/store'
+console.log store
 var io = require 'socket.io-client'
 var socket = io process:config.HOST
-socket.on('c',console:log)
-console.log(xd)
-console.log(xdd)
-console.log process:env
-console.log 'xd'
-console.log process:config
-var store = {
-	title: ""
-	items: [
-		{title: "git clone hello-world-imba"}
-		{title: "npm install"}
-		{title: "npm run dev"}
-		{title: "yooooo"}
-		{title: "{xd}"}
-		{title: "{xdd}"}
-		{title: "hi"}
-	]
-}
 
+if process:config.MODE === 'dev'
+	console.log 'development mode is on'
+	console.log process:config
+	socket.on 'reload' do
+		console.log 'hot reloading...'
+		Imba.setTimeout(1000) do
+			window:location.reload
+		 
 tag App
 	prop d
 	def addItem
@@ -33,9 +23,9 @@ tag App
 			<header>
 				<input[data:title] placeholder="New..." :keyup.enter.addItem>
 				<button :tap.addItem> 'Add item'
-				<button :click=(do d++)> d
-			<ul> for item in data:items
-				<li> item:title
+				<button :click=(do d++)>
+			<p>
+				data:key
 
-
+console.log window:user
 Imba.mount <App[store] d=0>

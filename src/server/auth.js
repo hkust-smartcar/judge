@@ -14,12 +14,7 @@ const init = app => {
   
   //define routes
   app.get('/login',passport.authenticate('oidc'))
-  app.get('/login/oidc/callback', passport.authenticate('oidc', { failureRedirect: '/b', successRedirect: '/b' }))
-  app.get('/b',(req,res)=>{
-    if(!req.session.passport)res.redirect('/login')
-    console.log(req.session)
-    return res.send(req.session.passport.user.displayName)
-  })
+  app.get('/login/oidc/callback', passport.authenticate('oidc', { failureRedirect: '/', successRedirect: '/profile' }))
   
   //implement the way passportjs serialize and deserialize a user
   passport.serializeUser(function(user, done) {
@@ -44,40 +39,7 @@ const init = app => {
       return cb(null, profile) || true
   }))
   
-  console.log('hello world')
+  console.log('auth init')
 }
 
 module.exports = init
-
-// const router = express.Router()
-
-// router.get('/',passport.authenticate('oidc'))
-// router.get('/oidc/callback', passport.authenticate('oidc', { failureRedirect: '/', successRedirect: '/dat' }))
-// router.get('/data',(req,res)=>res.send(req.session))
-// // router.get('/',(req,res)=>{
-// //   if(!req.session.passport)res.redirect('/login')
-// //   console.log(req.session)
-// //   return res.send(req.session.passport.user.displayName)
-// // })
-
-// //implement the way passportjs serialize and deserialize a user
-// passport.serializeUser(function(user, done) {
-//   done(null, user);
-// });
-// passport.deserializeUser(function(user, done) {
-//   done(null, user);
-// });
-
-// //implement the way passportjs handle oidc login behaviour
-// console.log(process.config.HOST + '/login/oidc/callback')
-// const OIDCStrategy = require('passport-openidconnect').Strategy
-// passport.use('oidc', new OIDCStrategy({
-//   ...process.config.oidc,
-//   callbackURL: process.config.HOST + '/login/oidc/callback'
-// }, (iss, sub, profile, jwtClaims, accessToken, refreshToken, params, cb) => {
-//   console.log('login success')
-//   console.log(profile)
-//   return cb(null, profile) || true
-// }))
-
-// module.exports = router

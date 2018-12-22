@@ -13,23 +13,27 @@ const session = require('express-session')
 const authInit = require('./auth')
 
 def initExpress client
-	app.use(express.static('./dist'))
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({ extended: true }))
 	app.use(session(process:config:passportSession))
 	app.use(passport.initialize());
 	app.use(passport.session());
+	# console.log self:__dirname
+	# app.set('views', path.join(__dirname, '/src/server/views'));
+	app.set('view engine', 'ejs') 
 	app.all '/*:8081' do |req,res,next|
 		res.header("Access-Control-Allow-Origin", "*")
 		res.header("Access-Control-Allow-Headers", "X-Requested-With")
 		res.header('Content-Type: application/json; charset=utf-8')
 		next()
-	
+	app.use(express.static('./dist'))
 	app.get '/profile' do |req,res|
 		if(!req:session:passport)
 			res.redirect('/login')
 		console.log(req:session)
 		return res.send(req:session:passport:user:displayName)
+	app.get '/test' do |req,res|
+		res.render('test.ejs',{message: 'hi'})
 		
 	authInit app
 
@@ -51,8 +55,8 @@ def initMongo
 			resolve client
 	return client
 
-console.log process:env.NODE_ENV
-console.log process:config
+# console.log process:env.NODE_ENV
+# console.log process:config
 
 def main
 	var client = await initMongo

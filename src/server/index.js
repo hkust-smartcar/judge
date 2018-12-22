@@ -59,15 +59,15 @@ const initExpress = client => {
 		res.header('Content-Type: application/json; charset=utf-8')
 		next()
   })
-	app.use(express.static('./dist'))
+	app.get('/',(req,res)=>{
+    return res.render('index.ejs',{user: JSON.stringify(req.session.passport), page:''})
+  })
+  app.use(express.static('./dist'))
 	app.get('/profile',(req,res)=>{
 		if(!req.session.passport)
 			res.redirect('/login')
 		return res.render('index.ejs',{user: JSON.stringify(req.session.passport), page:'profile'})
   })
-	// app.get('/test', (req,res)=>{
-	// 	return res.render('test.ejs',{message: 'hi'})
-  // })
 	app.get('/test', (req,res)=>{
 		return res.render('index.ejs',{user: `{"a":123,"b":{"c":"d"}}`,page:'hi'})
   })
@@ -79,7 +79,7 @@ const initExpress = client => {
 
 const initSocket = client => {
 	io.sockets.on('connection', socket => {
-		console.log('connected',socket.id,socket.request.session)
+		console.log('connected',socket.id)
 		socket.emit('c','hi')
 		socket.on('chatRoom', data => {
 			console.log(data)

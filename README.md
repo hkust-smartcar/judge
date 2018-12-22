@@ -14,6 +14,10 @@ npm run dev
 npm start
 ```
 
+## Notes on npm packages
+
+- Webpack 4.x does not work.
+
 ## Obtain Environment Configurations
 
 set you environment configurations in `/config.js`

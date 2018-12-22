@@ -6,6 +6,9 @@
     "boilerplate"
   ],
   "author": "dipsywong98",
+  "contributors": [
+    "mcreng"
+  ],
   "bugs": "https://github.com/dipsywong98/imba-template/issues",
   "version": "1.0.0",
   "engines": {
@@ -43,8 +46,9 @@
     "webpack-dev-server": "^3.1.11"
   },
   "devDependencies": {
+    "concurrently": "4.1.0",
     "cross-env": "^5.2.0",
     "nodemon": "^1.17.4",
-    "concurrently": "4.1.0"
+    "webpack-cli": "^3.1.2"
   }
 }

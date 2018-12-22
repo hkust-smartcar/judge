@@ -33,5 +33,7 @@ store:user = window:user
 store:page = window:page || '/'
 
 console.log window:user
+socket.on 'name' do |data|
+	console.log data
 
 Imba.mount <App>

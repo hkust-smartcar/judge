@@ -13,8 +13,8 @@
   },
   "scripts": {
     "start": "npm run build && cross-env NODE_ENV=production imba src/server/index.imba",
-    "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run client-dev\"",
-    "server-dev": "nodemon --watch src/ -e js,imba --exec cross-env NODE_ENV=dev imba src/server/index.imba",
+    "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run watch\"",
+    "server-dev": "nodemon --watch src/ -e js,imba,ejs --exec cross-env NODE_ENV=dev node src/server/index.js",
     "client-dev": "webpack-dev-server --env.NODE_ENV=dev --content-base dist/",
     "build": "webpack",
     "watch": "webpack --watch --progress --colors --display-modules --env.NODE_ENV=dev"

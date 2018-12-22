@@ -1,6 +1,5 @@
-tag Index
-  render
-    <self>
-      "index"
-
-export Index
+export tag Index
+  def render
+    return
+      <self>
+        "index"

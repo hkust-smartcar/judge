@@ -30,6 +30,12 @@ store.on('error', function(error) {
   assert.ok(false);
 })
 
+const sessionMiddleware = session({...process.config.passportSession,store})
+
+io.use(function(socket, next) {
+  sessionMiddleware(socket.request, socket.request.res, next);
+});
+
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs') 
 app.all('*',(req,res,next)=>{
@@ -43,7 +49,7 @@ app.all('*',(req,res,next)=>{
 const initExpress = client => {
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({ extended: true }))
-	app.use(session({...process.config.passportSession,store}))
+	app.use(sessionMiddleware)
 	app.use(passport.initialize());
 	app.use(passport.session());
 	// console.log(__dirname)
@@ -73,7 +79,7 @@ const initExpress = client => {
 
 const initSocket = client => {
 	io.sockets.on('connection', socket => {
-		console.log('connected',socket.id)
+		console.log('connected',socket.id,socket.request.session)
 		socket.emit('c','hi')
 		socket.on('chatRoom', data => {
 			console.log(data)

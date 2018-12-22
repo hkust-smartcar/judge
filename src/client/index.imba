@@ -1,6 +1,8 @@
 require 'imba-router'
 import {store} from './lib/store'
-console.log store
+import {Index} from './page/index'
+import {Profile} from './page/profile'
+import {ScoreBoard} from './page/score-board'
 var io = require 'socket.io-client'
 var socket = io process:config.HOST
 
@@ -12,20 +14,16 @@ if process:config.MODE === 'dev'
 		Imba.setTimeout(1000) do
 			window:location.reload
 		 
-tag App
-	prop d
-	def addItem
-		data:items.push(title: data:title)
-		data:title = ""
-		
+tag App		
 	def render
-		<self.vbox>
-			<header>
-				<input[data:title] placeholder="New..." :keyup.enter.addItem>
-				<button :tap.addItem> 'Add item'
-				<button :click=(do d++)>
+		<self>
+			<a route-to='/'> "Home"
+			<a route-to='/profile'> "profile"
+			<Index route='/'> 
+			<Profile route='/profile'>
 			<p>
-				data:key
+				page
 
-console.log window:user
-Imba.mount <App[store] d=0>
+store:user = window:user
+store:page = window:page || '/'
+Imba.mount <App page>

@@ -14,11 +14,21 @@ const session = require('express-session')
 const path = require('path')
 const fs = require('fs')
 const { exec } = require('child_process')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 const initAuth = require('./auth')
 const initHotReload = require('./hot-reload')(io)
 
 let loaded = false
+
+var store = new MongoDBStore({
+  uri: 'mongodb://localhost:27017/judge_session',
+  collection: 'judge_sessions'
+})
+store.on('error', function(error) {
+  assert.ifError(error);
+  assert.ok(false);
+})
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs') 
@@ -33,7 +43,7 @@ app.all('*',(req,res,next)=>{
 const initExpress = client => {
 	app.use(bodyParser.json())
 	app.use(bodyParser.urlencoded({ extended: true }))
-	app.use(session(process.config.passportSession))
+	app.use(session({...process.config.passportSession,store}))
 	app.use(passport.initialize());
 	app.use(passport.session());
 	// console.log(__dirname)
@@ -55,7 +65,7 @@ const initExpress = client => {
 	app.get('/test', (req,res)=>{
 		return res.render('index.ejs',{user: `{"a":123,"b":{"c":"d"}}`,page:'hi'})
   })
-  app.get('/pull', (req,res)=>{
+  app.post('/pull', (req,res)=>{
     exec('git pull origin master && npm i',(...params)=>{res.send(params)})
   })
 	initAuth(app)

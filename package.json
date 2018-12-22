@@ -15,7 +15,7 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "start": "npm run build && cross-env NODE_ENV=production imba src/server/index.imba",
+    "start": "npm run build && cross-env NODE_ENV=production node src/server/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server-dev \" \"npm run watch\"",
     "server-dev": "nodemon --watch src/ -e js,imba,ejs --exec cross-env NODE_ENV=dev node src/server/index.js",
     "client-dev": "webpack-dev-server --env.NODE_ENV=dev --content-base dist/",
@@ -32,6 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "^2.0.4",
+    "connect-mongodb-session": "^2.0.6",
     "ejs": "^2.6.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",

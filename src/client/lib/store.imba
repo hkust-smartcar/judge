@@ -1,1 +1,1 @@
-export var store = {key: 'mama'}
+export var store = {}

@@ -30,8 +30,7 @@ tag App
 				<Profile route='/profile'>
 				<Submit route='/submit'>
 
-store:user = window:user
-store:page = window:page || '/'
+store:user = window:user || {}
 
 console.log window:user
 socket.on 'name' do |data|

@@ -3,11 +3,12 @@ import {store} from '../lib/store'
 
 export tag NavBar
   def render
-    <self.navbar>
-      <a route-to='/'> "Judge"
-      <div>
-        if store:user
+    <self.navbar.navbar-expand-lg.navbar-dark.bg-primary.bd-navbar css:color="white">
+      <a.navbar-brand route-to='/'> "Judge"
+      if store:user:id
+        <div>
           <a route-to='/submit'> "submit"
           <a route-to='/profile'> "profile"
-        else
-          <a href="/login"> "login"
+          <a href="/logout"> "logout"
+      else
+        <a.nav-link href="/login"> "login"

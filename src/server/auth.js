@@ -39,7 +39,7 @@ const init = app => {
       issuer: appconfig.auth.oidc.issuer,
       callbackURL: appconfig.host + '/login/oidc/callback'
   }, (iss, sub, profile, jwtClaims, accessToken, refreshToken, params, cb) => {
-      console.log(profile)
+      console.log(profile&&profile.displayName+' logged in')
       return cb(null, profile) || true
   }))
   

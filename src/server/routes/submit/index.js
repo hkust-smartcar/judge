@@ -25,6 +25,7 @@ router
 
     job.on("failed", err => {
       console.log(`job failed with error ${err}.`);
+      io.to(req.user.id).emit("alert", `Job id ${job.id} has error ${err}`);
     });
     job.save();
     return res.redirect("/submit");

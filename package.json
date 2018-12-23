@@ -9,7 +9,7 @@
   "contributors": [
     "mcreng"
   ],
-  "bugs": "https://github.com/dipsywong98/imba-template/issues",
+  "bugs": "https://github.com/hkust-smartcar/judge2/issues",
   "version": "1.0.0",
   "engines": {
     "node": ">=6.0.0"
@@ -23,10 +23,10 @@
   },
   "files": [],
   "directories": {},
-  "homepage": "http://imba.io",
+  "homepage": "https://robotics.ust.hk",
   "repository": {
     "type": "git",
-    "url": "git://github.com/somebee/hello-world-imba.git"
+    "url": "git://github.com/hkust-smartcar/judge2.git"
   },
   "license": "MIT",
   "dependencies": {

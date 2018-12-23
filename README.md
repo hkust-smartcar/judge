@@ -1,8 +1,23 @@
-# Imba Template
+# Judge
 
-imba server and client template, with live server and client reloading, environment separation
+An online judge system.
 
 ## Getting started
+
+### external packages
+
+- Install [mongodb](https://docs.mongodb.com/manual/administration/install-on-linux/)
+- Install redis by
+  ```bash
+  sudo apt install redis-server
+  ```
+- Install npm
+- Install firejail by
+  ```bash
+  sudo apt install firejail
+  ```
+
+### npm
 
 ```bash
 # install dependencies

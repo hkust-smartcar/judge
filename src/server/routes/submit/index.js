@@ -4,6 +4,8 @@ var upload = multer({ dest: "uploads/" });
 
 var router = express.Router();
 
+var jobQueue = require("./queue");
+
 router
   .route("/")
 
@@ -14,8 +16,15 @@ router
   })
 
   .post(upload.array("myfile"), (req, res) => {
-    console.log("POST submit", req.body);
-    console.log("files", req.files);
+    const job = jobQueue.createJob({ files: req.files });
+    job.on("succeeded", function(result) {
+      console.log("completed job " + job.id + " result " + result);
+    });
+
+    job.on("failed", err => {
+      console.log(`job failed with error ${err}.`);
+    });
+    job.save();
     return res.redirect("/submit");
   });
 

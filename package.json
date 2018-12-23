@@ -30,6 +30,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "await-exec": "^0.1.2",
+    "bee-queue": "^1.2.2",
     "chokidar": "^2.0.4",
     "connect-mongodb-session": "^2.0.6",
     "ejs": "^2.6.1",

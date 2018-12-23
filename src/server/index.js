@@ -1,8 +1,6 @@
 var config = require("../../config")(process.env.NODE_ENV);
 process.config = config;
 var express = require("express");
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
 var app = express();
 var port = process.config.PORT || 8080;
 var s = app.listen(port, () => {
@@ -53,48 +51,7 @@ const initExpress = client => {
   app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
-  // console.log(__dirname)
-  app.all("/*:8081", (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Content-Type: application/json; charset=utf-8");
-    next();
-  });
-  app.get("/", (req, res) => {
-    return res.render("index.ejs", {
-      user: JSON.stringify(req.session.passport),
-      page: ""
-    });
-  });
-  app.use(express.static("./dist"));
-  app.get("/profile", (req, res) => {
-    if (!req.session.passport) res.redirect("/login");
-    return res.render("index.ejs", {
-      user: JSON.stringify(req.session.passport),
-      page: "profile"
-    });
-  });
-  app.get("/test", (req, res) => {
-    return res.render("index.ejs", {
-      user: `{"a":123,"b":{"c":"d"}}`,
-      page: "hi"
-    });
-  });
-  app.post("/pull", (req, res) => {
-    exec("git pull origin master && npm i && pm2 restart judge", (...params) => {
-      res.send(params);
-    });
-  });
-  app.get('/submit',(req, res) => {
-    return res.render("index.ejs", {
-      user: JSON.stringify(req.session.passport),
-    });
-  });
-  app.post('/submit',upload.array('myfile'),(req,res)=>{
-    console.log('POST submit',req.body)
-    console.log('files',req.files)
-    return res.redirect('/submit')
-  })
+  app.use(require("./routes"));
   initAuth(app);
 };
 
@@ -142,3 +99,5 @@ const main = async () => {
 };
 
 main();
+
+module.exports = io;

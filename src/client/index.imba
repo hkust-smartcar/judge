@@ -35,5 +35,7 @@ store:user = window:user || {}
 console.log window:user
 socket.on 'name' do |data|
 	console.log data
+socket.on 'alert' do |data|
+	console.log data
 
 Imba.mount <App>

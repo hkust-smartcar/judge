@@ -9,9 +9,14 @@ import {Submit} from './page/submit'
 import {NavBar} from './components/nav-bar'
 # import {ScoreBoard} from './page/score-board'
 
+store:user = window:user && window:user:user
+
 if process:config.MODE === 'dev'
 	console.log 'development mode is on'
 	console.log process:config
+	window:store = store
+	console.log 'store is available to view at window.store'
+	console.log 'store', store
 	socket.on 'reload' do |data|
 		console.log 'hot reloading...'
 		console.log data
@@ -30,11 +35,7 @@ tag App
 				<Profile route='/profile'>
 				<Submit route='/submit'>
 
-store:user = window:user:user
 
-window:store = store
-
-console.log window:user
 socket.on 'name' do |data|
 	console.log data
 socket.on 'alert' do |data|

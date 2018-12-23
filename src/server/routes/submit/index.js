@@ -1,10 +1,11 @@
-var express = require("express");
-var multer = require("multer");
-var upload = multer({ dest: "uploads/" });
+const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const io = require("../../index");
 
-var router = express.Router();
+const router = express.Router();
 
-var jobQueue = require("./queue");
+const jobQueue = require("./queue");
 
 router
   .route("/")
@@ -19,6 +20,7 @@ router
     const job = jobQueue.createJob({ files: req.files });
     job.on("succeeded", function(result) {
       console.log("completed job " + job.id + " result " + result);
+      io.to(req.user.id).emit("alert", `Job id ${job.id} has result ${result}`);
     });
 
     job.on("failed", err => {

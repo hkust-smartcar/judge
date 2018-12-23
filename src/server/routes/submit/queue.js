@@ -16,18 +16,16 @@ jobQueue.on("ready", () => {
       case "text/x-python":
         console.log("Handling a Python file.");
         // Commenting these for now because firejail is not yet available in host.
-        /**
-        let output = await exec(
-          `firejail --overlay-tmpfs --quiet python ${file.path}`
-        );
+        // let output = await exec(
+        //   `firejail --overlay-tmpfs --quiet python ${file.path}`
+        // );
 
-        console.log(`stdout: ${output.stdout}`);
-        console.log(`stderr: ${output.stderr}`);
+        // console.log(`stdout: ${output.stdout}`);
+        // console.log(`stderr: ${output.stderr}`);
 
-        if (output.stderr) return new Error("Runtime error");
-        return output.stdout;
+        // if (output.stderr) return new Error("Runtime error");
+        // return output.stdout;
 
-        **/
         return "done";
 
       default:

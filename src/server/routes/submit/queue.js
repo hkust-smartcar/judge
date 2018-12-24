@@ -31,11 +31,11 @@ jobQueue.on("ready", () => {
         console.log(`stdout: ${output.stdout}`);
         console.log(`stderr: ${output.stderr}`);
 
-        if (output.stderr) return new Error("Runtime error");
+        if (output.stderr) throw new Error("Runtime error");
         return output.stdout;
 
       default:
-        console.log("invalid file type");
+        console.log("invalid file type " + job.id);
         return new Error("Invalid file type");
     }
   });

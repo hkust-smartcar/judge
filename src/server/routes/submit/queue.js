@@ -12,7 +12,14 @@ jobQueue.on("ready", () => {
     console.log(job.data.files);
 
     let file = job.data.files[0];
+    // console.log(file.mimetype);
+    if (file.mimetype === "text/plain") {
+      if (file.originalname.match(".py")) {
+        file.mimetype = "text/x-python";
+      }
+    }
     switch (file.mimetype) {
+      // case "text/plain":
       case "text/x-python":
         console.log("Handling a Python file.");
         let output = await exec(
@@ -28,6 +35,7 @@ jobQueue.on("ready", () => {
         return output.stdout;
 
       default:
+        console.log("invalid file type");
         return new Error("Invalid file type");
     }
   });

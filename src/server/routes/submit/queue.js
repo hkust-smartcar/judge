@@ -4,7 +4,8 @@ const {
   InvalidTypeError,
   RuntimeError,
   MemoryError,
-  TimeError
+  TimeError,
+  CompilationError
 } = require("./error");
 
 const jobQueue = new Queue("job", {
@@ -19,7 +20,7 @@ jobQueue.on("ready", () => {
     let filetype = file.originalname.split(".").pop();
 
     switch (filetype) {
-      case "py":
+      case "py": {
         console.log("Handling a Python file.");
 
         /**
@@ -55,7 +56,43 @@ jobQueue.on("ready", () => {
 
         console.log(`stdout: ${output.stdout}`);
         return output.stdout;
+      }
 
+      case "cpp": {
+        console.log("Handling a C++ file.");
+        await exec(`mv ${file.path} ${file.path}.cpp`);
+        await exec(`g++ -std=c++11 ${file.path}.cpp -o ${file.path}`).catch(
+          err => {
+            throw new CompilationError();
+          }
+        ); // compilation
+        await exec(`rm ${file.path}.cpp`);
+
+        console.log("C++ compiled.");
+
+        let output = await exec(
+          `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 ${
+            file.path
+          }`
+        ).catch(err => {
+          console.log(err);
+          let errMsg = err.stderr;
+          if (err.stderr.includes("std::bad_alloc")) {
+            // C++ returns std::bad_alloc if new operators can no longer allocate memory
+            // malloc should be fine because if no memory can be allocated, malloc returns NULL and
+            // does not throw exceptions.
+            throw new MemoryError();
+          } else if (err.code == 1) {
+            // code 1 means firejail terminated the procedure => time limit exceeded
+            throw new TimeError();
+          } else {
+            throw new MemoryError();
+          }
+        });
+
+        console.log(`stdout: ${output.stdout}`);
+        return output.stdout;
+      }
       default:
         return new InvalidTypeError();
     }

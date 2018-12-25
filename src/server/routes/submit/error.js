@@ -20,8 +20,20 @@ class MemoryError extends Error {
 
 class TimeError extends Error {
   constructor() {
-    super("Time Limit Exceeded.");
+    super("Time Limit Exceeded");
   }
 }
 
-module.exports = { InvalidTypeError, RuntimeError, MemoryError, TimeError };
+class CompilationError extends Error {
+  constructor() {
+    super("Compilation Error");
+  }
+}
+
+module.exports = {
+  InvalidTypeError,
+  RuntimeError,
+  MemoryError,
+  TimeError,
+  CompilationError
+};

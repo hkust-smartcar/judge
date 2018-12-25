@@ -1,6 +1,14 @@
+import { store } from '../lib/store.imba'
+import { Submit } from '../components/submit'
+
 export tag Index
   def render
     return
       <self>
-        <p> 'Index'
-        
+        <h1 css:margin="10px"> "Welcome to HKUST Racing Online Judging System"
+        if !store:user
+          <p> "You are not currently logged in, please log in"
+          <a.btn.btn-raised.btn-primary href="loging"> "login"
+        else 
+          <p> "Hello {store:user:displayName}, you may submit your works at here"
+          <Submit>

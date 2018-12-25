@@ -8,7 +8,7 @@ router
     if (!req.session.passport) res.redirect("/login");
     return res.render("index.ejs", {
       user: JSON.stringify(req.session.passport),
-      page: "profile"
+      title: "Profile"
     });
   });
 

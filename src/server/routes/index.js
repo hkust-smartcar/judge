@@ -25,4 +25,6 @@ router.use("/pull", require("./pull"));
 
 router.use("/submit", require("./submit"));
 
+router.use("/api", require("./api"));
+
 module.exports = router;

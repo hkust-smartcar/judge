@@ -26,22 +26,22 @@ const generateDummy = userid => {
 /**
  * query parameters:
  * userid: submits of which user to display, if not sepecified it is logged in user, not logged in error
- * page: for infinite loading, each page contains 20 submits. Not specified than page 0
+ * page: for infinite loading, each page contains 20 submits. Not specified than page 1
  * all: to display all users' submits, need admin previllage
  *
  * response from newest to oldest
  */
 router.route("/").get((req, res) => {
-  const { userid, page = 0, all } = req.query;
+  const { userid, page = 1, all } = req.query;
   const user = getSessionUser(req);
   if (!!all && isAdmin(user)) {
-    res.json({ submits: generateDummy(), page });
+    res.json({ submits: generateDummy(), page, totalPages: 20 });
   } else {
     let queryUserId = userid;
     if (!queryUserId) {
       queryUserId = user.id;
     }
-    res.json({ submits: generateDummy(queryUserId), page });
+    res.json({ submits: generateDummy(queryUserId), page, totalPages: 20 });
   }
 });
 

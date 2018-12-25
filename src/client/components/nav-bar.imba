@@ -11,7 +11,6 @@ export tag NavBar
             <img.avatar src=store:user:_json:picture>
             store:user:displayName
           <div.dropdown-menu >
-            <a.dropdown-item route-to='/submit'> "submit"
             <a.dropdown-item route-to='/profile'> "profile"
             <a.dropdown-item href="/logout"> "logout"
       else

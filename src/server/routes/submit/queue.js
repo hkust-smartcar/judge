@@ -12,15 +12,11 @@ jobQueue.on("ready", () => {
     console.log(job.data.files);
 
     let file = job.data.files[0];
-    // console.log(file.mimetype);
-    if (file.mimetype === "text/plain") {
-      if (file.originalname.match(".py")) {
-        file.mimetype = "text/x-python";
-      }
-    }
-    switch (file.mimetype) {
-      // case "text/plain":
-      case "text/x-python":
+    console.log(file);
+    let filetype = file.originalname.split(".").pop();
+
+    switch (filetype) {
+      case "py":
         console.log("Handling a Python file.");
         let output = await exec(
           `firejail --overlay-tmpfs --quiet --noprofile --net=none python ${

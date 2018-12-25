@@ -3,6 +3,10 @@
     "id": 0,
     "name": "Fibonacci Numbers",
     "type": "IO",
+    "limits": {
+      "memory": 128,
+      "time": 1
+    },
     "descriptions": [
       "Amy is a mathematician and she is fascinated with Fibonacci numbers. She wants to do more research on it but it requires her knowing where any natural number $n$ is in the Fibonacci sequence. As a programmer, can you help her?",
       "The Fibonacci sequence is defined by $$F_0 = 1, \\qquad F_1 = 1, \\qquad F_n = F_{n-1} + F_{n-2}. $$",

@@ -12,12 +12,12 @@
     "output": "'T' if $n$ is in the Fibonacci sequence, 'F' otherwise.",
     "examples": [
       {
-        "input": 5,
+        "input": "5",
         "output": "T",
         "explanation": "$F_5$ = 5."
       },
       {
-        "input": 12,
+        "input": "12",
         "output": "F",
         "explanation": "$F_6$ = 8 and $F_7$ = 13."
       }

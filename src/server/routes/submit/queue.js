@@ -1,5 +1,11 @@
 const Queue = require("bee-queue");
 const exec = require("await-exec");
+const {
+  InvalidTypeError,
+  RuntimeError,
+  MemoryError,
+  TimeError
+} = require("./error");
 
 const jobQueue = new Queue("job", {
   removeOnSuccess: true,
@@ -33,7 +39,7 @@ jobQueue.on("ready", () => {
         ).catch(err => {
           // If no stderr => time limit exceeded
           if (err.stderr === "") {
-            throw new Error("Time Limit Exceeded");
+            throw new TimeError();
           } else {
             // check error message from python output
             let errMsg = err.stderr.split("\n")[
@@ -41,9 +47,9 @@ jobQueue.on("ready", () => {
             ];
             console.log(errMsg);
             // if message contains MemoryError, throw Memory Error
-            if (errMsg.includes("MemoryError")) throw new Error("Memory Error");
+            if (errMsg.includes("MemoryError")) throw new MemoryError();
             // otherwise they are runtime errors
-            else throw new Error("Runtime Error");
+            else throw new RuntimeError();
           }
         });
 
@@ -51,7 +57,7 @@ jobQueue.on("ready", () => {
         return output.stdout;
 
       default:
-        return new Error("Invalid File Type");
+        return new InvalidTypeError();
     }
   });
 });

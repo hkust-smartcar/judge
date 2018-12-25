@@ -16,24 +16,35 @@ router
     });
   })
 
+  // POST submission file
   .post(upload.array("myfile"), (req, res) => {
-    // console.log(req.body, req.files);
+    // Create job
     const job = jobQueue.createJob({ files: req.files });
-    job.on("succeeded", function(result) {
-      console.log("completed job " + job.id + " result ", result);
-      io.to(req.user.id).emit(
-        "alert",
-        { type: "result", job_id: job.id, result },
-        `Job id ${job.id} has result`,
-        result
-      );
-    });
 
-    job.on("failed", err => {
-      console.log(`job failed with error ${err}.`);
-      io.to(req.user.id).emit("alert", `Job id ${job.id} has error ${err}`);
-    });
-    job.save();
+    // On job successful, emit socket
+    job
+
+      .on("succeeded", function(result) {
+        console.log("completed job " + job.id + " result ", result);
+        io.to(req.user.id).emit("alert", {
+          type: "result",
+          job_id: job.id,
+          result
+        });
+      })
+
+      // On job failure, emit socket
+      .on("failed", err => {
+        console.log(`job failed with error ${err.message}.`);
+        io.to(req.user.id).emit("alert", {
+          type: "result",
+          job_id: job.id,
+          error: err.message
+        });
+      })
+
+      .save();
+
     return res.send("submitted");
   });
 

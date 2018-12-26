@@ -47,11 +47,17 @@ app.all("*", (req, res, next) => {
 
 const initExpress = client => {
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(require("./routes"));
+  app.post("/test", (req, res) => {
+    console.log(req);
+    console.log(req.body);
+    // res.json(req);
+    res.send("test");
+  });
   initAuth(app);
 };
 

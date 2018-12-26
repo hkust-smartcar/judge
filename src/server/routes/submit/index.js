@@ -27,7 +27,11 @@ router
     console.log("POST submit", req.body);
     console.log("files", req.files);
     // console.log("body:", req.body);
-    const job = jobQueue.createJob({ files: req.files.myfile });
+    const job = jobQueue.createJob({
+      user: req.user.id,
+      files: req.files.myfile,
+      qid: req.body.qid
+    });
 
     // On job successful, emit socket
     job
@@ -37,7 +41,7 @@ router
         io.to(req.user.id).emit("alert", {
           type: "result",
           job_id: job.id,
-          result
+          status: "Pending"
         });
       })
 
@@ -47,6 +51,7 @@ router
         io.to(req.user.id).emit("alert", {
           type: "result",
           job_id: job.id,
+          status: "Completed",
           error: err.message
         });
       })

@@ -142,5 +142,48 @@
         ]
       }
     ]
+  },
+  {
+    "id": 1,
+    "name": "Corner Detector",
+    "type": "IOApprox",
+    "limits": {
+      "memory": 128,
+      "time": 1
+    },
+    "descriptions": ["Detect corners!"],
+    "input": "A path to the image",
+    "output": "Number of corners found, then followed by x and y coordinates of all corners, separated by space.",
+    "examples": [
+      {
+        "input": "0004b.bmp",
+        "output": "4 54 162 74 5 23 56 3 5",
+        "explanation": "There are four corners in the image, located in (54, 162), (74, 5), (23, 56), (3, 5)."
+      },
+      {
+        "input": "0037b.bmp",
+        "output": "0",
+        "explanation": "There are no corners."
+      }
+    ],
+    "subtasks": [
+      {
+        "id": 0,
+        "constraints": [],
+        "points": 100,
+        "dataset": [
+          {
+            "input": "0004b.bmp",
+            "output": "4 54 162 74 5 23 56 3 5",
+            "points": 50
+          },
+          {
+            "input": "0037b.bmp",
+            "output": "0",
+            "points": 50
+          }
+        ]
+      }
+    ]
   }
 ]

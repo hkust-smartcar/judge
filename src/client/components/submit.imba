@@ -8,7 +8,7 @@ export tag Submit
             <div.col-sm.form-group>
               <label.bmd-label-floating for="question">
                 "Question"
-              <input.form-control id="question" value="Corner Detection Challendge" disabled=true>
+              <input.form-control id="question" name="qid" value="0" disabled=true>
               <span.bmd-help> "hi"
             
             <div.col-sm>

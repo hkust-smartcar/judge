@@ -1,3 +1,4 @@
+const questions = require("../../../../questions.json");
 const Queue = require("bee-queue");
 const exec = require("await-exec");
 const io = require("../../index");
@@ -20,13 +21,16 @@ jobQueue.on("ready", () => {
   jobQueue.process(async job => {
     let file = job.data.files[0];
     let user = job.data.user;
+    let qid = job.data.qid;
+
+    let subtasks = questions[qid]["subtasks"];
+
     console.log(`Processing job ${job.id} with name ${file.originalname}`);
     let filetype = file.originalname.split(".").pop();
 
     switch (filetype) {
       case "py": {
         console.log("Handling a Python file.");
-
         /**
          * firejail: sandbox
          * --overlay-tmpfs: Overlay a temporary filesystem which does not affect the real one
@@ -40,36 +44,39 @@ jobQueue.on("ready", () => {
         let cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 python3 ${
           file.path
         }`;
-        let input = "0004b.bmp";
+        for (subtask of subtasks) {
+          for (dataset of subtask["dataset"]) {
+            console.log(`Handling input ${dataset["input"]}`);
+            // Create job
+            const job = execPyQueue.createJob({ cmd, input: dataset["input"] });
 
-        // Create job
-        const job = execPyQueue.createJob({ cmd, input });
+            // On job successful, emit socket
+            job
 
-        // On job successful, emit socket
-        job
+              .on("succeeded", function(result) {
+                console.log("completed job " + job.id + " result ", result);
+                io.to(user).emit("alert", {
+                  type: "result",
+                  job_id: job.id,
+                  status: "Completed",
+                  result
+                });
+              })
 
-          .on("succeeded", function(result) {
-            console.log("completed job " + job.id + " result ", result);
-            io.to(user).emit("alert", {
-              type: "result",
-              job_id: job.id,
-              status: "Completed",
-              result
-            });
-          })
+              // On job failure, emit socket
+              .on("failed", err => {
+                console.log(`job failed with error ${err.message}.`);
+                io.to(user).emit("alert", {
+                  type: "result",
+                  job_id: job.id,
+                  status: "Completed",
+                  error: err.message
+                });
+              })
 
-          // On job failure, emit socket
-          .on("failed", err => {
-            console.log(`job failed with error ${err.message}.`);
-            io.to(user).emit("alert", {
-              type: "result",
-              job_id: job.id,
-              status: "Completed",
-              error: err.message
-            });
-          })
-
-          .save();
+              .save();
+          }
+        }
         return;
       }
 

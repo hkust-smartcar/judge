@@ -29,7 +29,8 @@ router
     // console.log("body:", req.body);
     const job = jobQueue.createJob({
       user: req.user.id,
-      files: req.files.myfile
+      files: req.files.myfile,
+      qid: req.body.qid
     });
 
     // On job successful, emit socket

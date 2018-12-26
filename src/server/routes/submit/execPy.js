@@ -8,7 +8,7 @@ const {
   CompilationError
 } = require("./error");
 
-const execPyQueue = new Queue("job", {
+const execPyQueue = new Queue("execPy", {
   removeOnSuccess: true,
   removeOnFailure: true
 });

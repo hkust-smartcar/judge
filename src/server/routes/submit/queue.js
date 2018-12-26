@@ -1,5 +1,6 @@
 const Queue = require("bee-queue");
 const exec = require("await-exec");
+const io = require("../../index");
 const {
   InvalidTypeError,
   RuntimeError,
@@ -13,9 +14,12 @@ const jobQueue = new Queue("job", {
   removeOnFailure: true
 });
 
+const execPyQueue = require("./execPy");
+
 jobQueue.on("ready", () => {
   jobQueue.process(async job => {
     let file = job.data.files[0];
+    let user = job.data.user;
     console.log(`Processing job ${job.id} with name ${file.originalname}`);
     let filetype = file.originalname.split(".").pop();
 
@@ -33,29 +37,40 @@ jobQueue.on("ready", () => {
          * --timeout=: Time out. For python, we need to add 3s for startup time.
          * python3: Run python3
          */
-        let output = await exec(
-          `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 python3 ${
-            file.path
-          }`
-        ).catch(err => {
-          // If no stderr => time limit exceeded
-          if (err.stderr === "") {
-            throw new TimeError();
-          } else {
-            // check error message from python output
-            let errMsg = err.stderr.split("\n")[
-              err.stderr.split("\n").length - 2
-            ];
-            console.log(errMsg);
-            // if message contains MemoryError, throw Memory Error
-            if (errMsg.includes("MemoryError")) throw new MemoryError();
-            // otherwise they are runtime errors
-            else throw new RuntimeError();
-          }
-        });
+        let cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 python3 ${
+          file.path
+        }`;
+        let input = "0004b.bmp";
 
-        console.log(`stdout: ${output.stdout}`);
-        return output.stdout;
+        // Create job
+        const job = execPyQueue.createJob({ cmd, input });
+
+        // On job successful, emit socket
+        job
+
+          .on("succeeded", function(result) {
+            console.log("completed job " + job.id + " result ", result);
+            io.to(user).emit("alert", {
+              type: "result",
+              job_id: job.id,
+              status: "Completed",
+              result
+            });
+          })
+
+          // On job failure, emit socket
+          .on("failed", err => {
+            console.log(`job failed with error ${err.message}.`);
+            io.to(user).emit("alert", {
+              type: "result",
+              job_id: job.id,
+              status: "Completed",
+              error: err.message
+            });
+          })
+
+          .save();
+        return;
       }
 
       case "cpp": {
@@ -76,7 +91,6 @@ jobQueue.on("ready", () => {
           }`
         ).catch(err => {
           console.log(err);
-          let errMsg = err.stderr;
           if (err.stderr.includes("std::bad_alloc")) {
             // C++ returns std::bad_alloc if new operators can no longer allocate memory
             // malloc should be fine because if no memory can be allocated, malloc returns NULL and

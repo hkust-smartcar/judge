@@ -19,7 +19,7 @@ router
   // POST submission file
   .post(upload.array("myfile"), (req, res) => {
     // Create job
-    const job = jobQueue.createJob({ files: req.files });
+    const job = jobQueue.createJob({ user: req.user.id, files: req.files });
 
     // On job successful, emit socket
     job
@@ -29,7 +29,7 @@ router
         io.to(req.user.id).emit("alert", {
           type: "result",
           job_id: job.id,
-          result
+          status: "Pending"
         });
       })
 
@@ -39,6 +39,7 @@ router
         io.to(req.user.id).emit("alert", {
           type: "result",
           job_id: job.id,
+          status: "Completed",
           error: err.message
         });
       })

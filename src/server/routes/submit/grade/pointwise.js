@@ -3,23 +3,30 @@
  * then calculate its sum of L1 loss
  * foreach missing matching, it will add a unit penalty
  *
- * @param {user's answer} submittedAnswers
- * @param {model answer} modelAnswers
- * @param {penalty for each unmatched corners} unmatchPenalty
+ * @param {Number[][]} submittedAnswers user's answer
+ * @param {Number[][]} modelAnswers model answer
+ * @param {Number} maxScore maximum score
+ * @param {Number} unmatchPenalty penalty for each unmatched points
  */
 
-const cornerMatchLoss = (
+const pointMatchLoss = (
   submittedAnswers,
   modelAnswers,
-  unmatchPenalty = 320 * 240
+  maxScore,
+  unmatchPenalty = Math.sqrt(320 ** 2 + 240 ** 2)
 ) => {
   const pairs = matchPair(submittedAnswers, modelAnswers);
   const numOfUnmatched = Math.abs(
     submittedAnswers.length - modelAnswers.length
   );
   return (
-    pairs.reduce((prev, currv) => prev + dist(currv), 0) +
-    numOfUnmatched * unmatchPenalty
+    (1 -
+      Math.tanh(
+        (pairs.reduce((prev, currv) => prev + dist(currv), 0) +
+          numOfUnmatched * unmatchPenalty) /
+          2000
+      )) *
+    maxScore
   );
 };
 
@@ -27,8 +34,8 @@ const cornerMatchLoss = (
  * pair two sets of points to maximize grade
  * using stable marriage, which is programmer's view on marriage lol
  *
- * @param {user's answer} res_
- * @param {model answer} ans_
+ * @param {Number[][]} res_ user's answer, array of 2-tuple
+ * @param {Number[][]} ans_ model answer, array of 2-tuple
  *
  * @return edges connecting the point to paired point
  * no edges means no matching edge
@@ -105,10 +112,11 @@ const matchPair = (res_, ans_) => {
 };
 
 /**
- * L1 distance
+ * L2 distance
  *
- * @param {an edge denoted by array of points} param0
+ * @param {Number[][]} param0 an edge denoted by array of points
  */
-const dist = ([[x0, y0], [x1, y1]]) => Math.abs(x0 - x1) + Math.abs(y0 - y1);
+const dist = ([[x0, y0], [x1, y1]]) =>
+  Math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2);
 
-module.exports = { cornerMatchLoss, matchPair };
+module.exports = { pointMatchLoss, matchPair };

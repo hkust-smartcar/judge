@@ -5,6 +5,7 @@ import {store} from './lib/store'
 # store:socket = socket
 import {Index} from './page/index'
 import {Profile} from './page/profile'
+import {Admin} from './page/admin'
 import {Submit} from './components/submit'
 import {NavBar} from './components/nav-bar'
 # import {ScoreBoard} from './page/score-board'
@@ -32,6 +33,7 @@ tag App
 					<Index route='/'> 
 					<Profile route='/profile'>
 					<Submit route='/submit'>
+					<Admin route='/admin'>
 
 
 socket.on 'name' do |data|

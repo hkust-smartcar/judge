@@ -2,9 +2,7 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment");
 
-const { getSessionUser } = require("../helper");
-
-const isAdmin = user => true;
+const { getSessionUser, isAdmin } = require("../helper");
 
 const generateDummy = userid => {
   return Array(20)

@@ -6,7 +6,7 @@ export tag Profile
   def render
     return
       <self>
-        <h1 css:margin="10px"> "Profile"
+        <h1 css:margin="10px"> "Profile and Submit Records"
         <p> "Hello {store:user:displayName}, you may submit or view your works at here"
         <Submit>
         <SubmitRecords>

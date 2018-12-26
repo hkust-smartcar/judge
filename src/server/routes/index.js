@@ -27,4 +27,6 @@ router.use("/submit", require("./submit"));
 
 router.use("/api", require("./api"));
 
+router.use("/admin", require("./admin"));
+
 module.exports = router;

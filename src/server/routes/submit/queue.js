@@ -22,7 +22,7 @@ jobQueue.on("ready", () => {
   jobQueue.process(async job => {
     let file = job.data.files[0];
     let user = job.data.user;
-    let qid = job.data.qid;
+    let qid = job.data.question_id;
 
     let subtasks = questions[qid]["subtasks"];
 
@@ -77,16 +77,22 @@ jobQueue.on("ready", () => {
       for (dataset of subtask["dataset"]) {
         console.log(`Handling input ${dataset["input"]}`);
         // Create job
-        const job = queue.createJob({ cmd, input: dataset["input"] });
+        const execJob = queue.createJob({
+          cmd,
+          input: dataset["input"]
+        });
 
         // On job successful, emit socket
-        job
+        execJob
 
           .on("succeeded", function(result) {
             console.log("completed job " + job.id + " result ", result);
             io.to(user).emit("alert", {
               type: "result",
-              job_id: job.id,
+              submission_id: job.id,
+              job_id: execJob.id,
+              question_id: parseInt(qid),
+              subtask_id: subtask["id"],
               status: "Completed",
               result
             });
@@ -97,7 +103,10 @@ jobQueue.on("ready", () => {
             console.log(`job failed with error ${err.message}.`);
             io.to(user).emit("alert", {
               type: "result",
-              job_id: job.id,
+              submission_id: job.id,
+              job_id: execJob.id,
+              question_id: parseInt(qid),
+              subtask_id: subtask["id"],
               status: "Completed",
               error: err.message
             });

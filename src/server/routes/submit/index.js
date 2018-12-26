@@ -30,7 +30,7 @@ router
     const job = jobQueue.createJob({
       user: req.user.id,
       files: req.files.myfile,
-      qid: req.body.qid
+      question_id: req.body.qid // question id
     });
 
     // On job successful, emit socket
@@ -40,7 +40,8 @@ router
         console.log("completed job " + job.id + " result ", result);
         io.to(req.user.id).emit("alert", {
           type: "result",
-          job_id: job.id,
+          submission_id: job.id,
+          question_id: parseInt(req.body.qid),
           status: "Pending"
         });
       })

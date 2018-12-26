@@ -2,10 +2,14 @@ const express = require("express");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const io = require("../../index");
+var bodyParser = require("body-parser");
 
 const router = express.Router();
 
 const jobQueue = require("./queue");
+
+// router.use(bodyParser.json());
+// router.use(bodyParser.urlencoded({ extended: true }));
 
 router
   .route("/")
@@ -17,9 +21,13 @@ router
   })
 
   // POST submission file
-  .post(upload.array("myfile"), (req, res) => {
-    // Create job
-    const job = jobQueue.createJob({ files: req.files });
+  .post(upload.fields([{ name: "qid" }, { name: "myfile" }]), (req, res) => {
+    // .post(upload.fields([{ name: "myfile", maxCount: 1 }]), (req, res) => {
+    // Create
+    console.log("POST submit", req.body);
+    console.log("files", req.files);
+    // console.log("body:", req.body);
+    const job = jobQueue.createJob({ files: req.files.myfile });
 
     // On job successful, emit socket
     job

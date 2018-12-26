@@ -1,7 +1,8 @@
 const questions = require("../../../../questions.json");
 const Queue = require("bee-queue");
 const exec = require("await-exec");
-const io = require("../../index");
+const io = require("../../socket").getio();
+const client = require("../../mongo").getdb();
 const {
   InvalidTypeError,
   RuntimeError,

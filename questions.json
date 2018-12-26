@@ -146,7 +146,7 @@
   {
     "id": 1,
     "name": "Corner Detector",
-    "type": "IOApprox",
+    "type": "IOPointwise",
     "limits": {
       "memory": 128,
       "time": 1

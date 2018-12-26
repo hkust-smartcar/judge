@@ -17,6 +17,7 @@ const jobQueue = new Queue("job", {
 
 const execPyQueue = require("./execPy");
 const execCppQueue = require("./execCpp");
+const evaluate = require("./grade");
 
 jobQueue.on("ready", () => {
   jobQueue.process(async job => {
@@ -75,7 +76,11 @@ jobQueue.on("ready", () => {
 
     for (subtask of subtasks) {
       for (dataset of subtask["dataset"]) {
-        console.log(`Handling input ${dataset["input"]}`);
+        let output = dataset["output"];
+        let maxScore = dataset["points"];
+        console.log(
+          `Handling input ${dataset["input"]} with output ${dataset["output"]}`
+        );
         // Create job
         const execJob = queue.createJob({
           cmd,
@@ -94,7 +99,7 @@ jobQueue.on("ready", () => {
               question_id: parseInt(qid),
               subtask_id: subtask["id"],
               status: "Completed",
-              result
+              score: evaluate(result, output, questions[qid]["type"], maxScore)
             });
           })
 

@@ -20,10 +20,11 @@ export tag Question
           <h1> "Question {@question:id} - {@question:name}"
           <h5> "Type - {@question:type}"
           <h3> "Descriptions"
-          <p> @question:descriptions
-          <h3> "Input: "
+          for description in @question:descriptions
+            <p> description
+          <h3> "Input"
           <p> @question:input
-          <h3> "Output: "
+          <h3> "Output"
           <p> @question:output
           <h3> "Examples"
           <table.table>
@@ -47,7 +48,9 @@ export tag Question
               <tbody>
                 for st in question:subtasks
                   <tr>
-                    <td> st:constraints
+                    <td>
+                      for con in st:constraints
+                        <p> con
                     <td> st:points
         <Submit qid=@qid>
 

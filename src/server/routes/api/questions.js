@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment");
 const { readFileSync, writeFileSync } = require("fs");
+const path = require("path");
 
 const { getSessionUser, isAdmin } = require("../helper");
 
 const getQuestions = () => {
-  const q = readFileSync("../questions.json");
+  const q = readFileSync(path.join(__dirname, "../../../../questions.json"));
   return JSON.parse(q);
 };
 
@@ -18,13 +19,15 @@ router
   .post((req, res) => {});
 
 router
-  .route("/:id")
+  .route("/:qid")
   .get((req, res) => {
     if (false && isAdmin(getSessionUser(req))) {
-      res.json(getQuestions().filter(({ id }) => id === id)[0]);
+      res.json(getQuestions().filter(({ id }) => id === req.params.qid)[0]);
     } else {
-      const q = getQuestions().filter(({ id }) => id === id)[0];
-      res.json(hideAdminOnlyField(q));
+      const q = getQuestions().filter(({ id }) => id == req.params.qid);
+      if (q.length == 0)
+        res.json({ error: `question of id ${req.params.qid} does not found` });
+      res.json(hideAdminOnlyField(q[0]));
     }
   })
   .put((req, res) => {});

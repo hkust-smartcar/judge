@@ -18,18 +18,18 @@
       {
         "input": "5",
         "output": "T",
-        "explanation": "$F_5$ = 5."
+        "explanation": "$F_5 = 5$."
       },
       {
         "input": "12",
         "output": "F",
-        "explanation": "$F_6$ = 8 and $F_7$ = 13."
+        "explanation": "$F_6 = 8$ and $F_7 = 13$."
       }
     ],
     "subtasks": [
       {
         "id": 0,
-        "constraints": ["1 \\leq $n$ \\leq 10"],
+        "constraints": ["$1 \\leq n \\leq 10$"],
         "points": 30,
         "dataset": [
           {
@@ -86,7 +86,7 @@
       },
       {
         "id": 1,
-        "constraints": ["1 \\leq $n$ \\leq 2147483647"],
+        "constraints": ["$1 \\leq n \\leq 2147483647$"],
         "points": 70,
         "dataset": [
           {

@@ -29,4 +29,6 @@ router.use("/api", require("./api"));
 
 router.use("/admin", require("./admin"));
 
+router.use("/questions", require("./questions"));
+
 module.exports = router;

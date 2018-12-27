@@ -1,4 +1,5 @@
 export tag Submit
+  prop qid default:0
   def render
     return 
       <self>
@@ -8,7 +9,7 @@ export tag Submit
             <div.col-sm.form-group>
               <label.bmd-label-floating for="question">
                 "Question"
-              <input.form-control id="question" name="qid" value="0" type="number">
+              <input.form-control[@qid] id="question" name="qid" type="number">
               <span.bmd-help> "hi"
             
             <div.col-sm>

@@ -2,6 +2,7 @@ var config = require("../../config")(process.env.NODE_ENV);
 process.config = config;
 var express = require("express");
 var app = express();
+const engine = require("ejs-locals");
 var port = process.config.PORT || 8080;
 var s = app.listen(port, () => {
   console.log("server is running on port " + port);
@@ -35,6 +36,7 @@ const sessionMiddleware = session({ ...process.config.passportSession, store });
 io.use(function(socket, next) {
   sessionMiddleware(socket.request, socket.request.res, next);
 });
+app.engine("ejs", engine);
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 app.all("*", (req, res, next) => {

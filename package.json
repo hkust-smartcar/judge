@@ -36,6 +36,7 @@
     "chokidar": "^2.0.4",
     "connect-mongodb-session": "^2.0.6",
     "ejs": "^2.6.1",
+    "ejs-locals": "^1.0.2",
     "express": "^4.16.2",
     "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",

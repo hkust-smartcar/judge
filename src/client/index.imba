@@ -6,6 +6,7 @@ import {store} from './lib/store'
 import {Index} from './page/index'
 import {Profile} from './page/profile'
 import {Admin} from './page/admin'
+import {Questions,Question} from './page/questions'
 import {Submit} from './components/submit'
 import {NavBar} from './components/nav-bar'
 # import {ScoreBoard} from './page/score-board'
@@ -34,6 +35,11 @@ tag App
 					<Profile route='/profile'>
 					<Submit route='/submit'>
 					<Admin route='/admin'>
+					<div route='/questions'>
+						if window:qid !== undefined
+							<Question qid=window:qid>
+						else
+							<Questions>
 
 
 socket.on 'name' do |data|

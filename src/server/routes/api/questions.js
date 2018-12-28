@@ -14,7 +14,7 @@ const getQuestions = () => {
 router
   .route("/")
   .get((req, res) => {
-    res.json(getQuestions());
+    res.json(getQuestions().map(hideAdminOnlyField));
   })
   .post((req, res) => {});
 

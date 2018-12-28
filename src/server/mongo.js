@@ -2,7 +2,7 @@ var client;
 
 const init = async () => {
   let MongoClient = require("mongodb").MongoClient;
-  let uri = "mongodb://localhost:27017";
+  let uri = "mongodb://localhost:27017/judge";
   client = new MongoClient(uri, { useNewUrlParser: true });
   await new Promise((resolve, reject) => {
     client.connect(err => {

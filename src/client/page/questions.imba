@@ -57,8 +57,33 @@ export tag Question
 
 
 export tag Questions
+  prop questions default:[]
+  def setup
+    window:$.ajax({url:'/api/questions'}).done do |data|
+      @questions = data
+      Imba.commit
   def render
     return
       <self>
-        <p>
-          "questions" + @qid
+        <h1> "Questions"
+        <table.table>
+          <thead>
+            <tr>
+              <th> "ID"
+              <th> "Name"
+              <th> "Type"
+              <th> "Memory"
+              <th> "Time"
+              <th> "Score"
+              <th> "More"
+          <tbody>
+            for q in @questions
+              <tr>
+                <td> q:id
+                <td> q:name
+                <td> q:type
+                <td> q:limits:memory + 'MB'
+                <td> q:limits:time + 's'
+                <td> q:subtasks.reduce(&,0) do |prev,currv,k|
+                  prev+currv:points
+                <td> <a.btn.btn-raised.btn-primary href="/questions/{q:id}"> "more"

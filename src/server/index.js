@@ -10,6 +10,7 @@ var s = app.listen(port, () => {
 var server = require("http").createServer(app);
 var io = require("./socket").init(s);
 console.log("socket io init");
+const assert = require("assert");
 var bodyParser = require("body-parser");
 const passport = require("passport");
 const session = require("express-session");

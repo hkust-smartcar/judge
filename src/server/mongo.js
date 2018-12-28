@@ -2,7 +2,10 @@ var mongoose = require("mongoose");
 
 const init = async () => {
   await mongoose
-    .connect("mongodb://localhost:27017/judge")
+    .connect(
+      "mongodb://localhost:27017/judge",
+      { useNewUrlParser: true }
+    )
     .then(() => {
       console.log("mongooese connected");
     })

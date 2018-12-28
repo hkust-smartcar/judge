@@ -29,7 +29,7 @@ const evaluate = (pred, exp, type, maxScore) => {
           resultArray[chunkIndex].push(item);
           return resultArray;
         }, []);
-      return pointMatchLoss(pred, exp, maxScore);
+      return pointMatchLoss(pred, exp, maxScore) || 0;
       break;
     default:
       // default as normal IO

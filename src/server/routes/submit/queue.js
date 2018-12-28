@@ -13,6 +13,8 @@ const jobQueue = new Queue("job", {
   removeOnFailure: true
 });
 
+const { sec2str } = require("../helper");
+
 const { upsertSubmission, saveExecution } = require("./schema");
 
 const execPyQueue = require("./execPy");
@@ -29,6 +31,8 @@ jobQueue.on("ready", () => {
     let qid = job.data.question_id;
 
     let subtasks = questions[qid]["subtasks"];
+    let memoryLim = questions[qid]["limits"]["memory"] * 1024 * 1024; // Memory limit in byte
+    let timeLim = sec2str(questions[qid]["limits"]["time"] + 3); // Time Limit in hh:mm:ss, plus 3 seconds of startup
 
     console.log(`Processing job ${job.id} with name ${file.originalname}`);
     let filetype = file.originalname.split(".").pop();
@@ -49,7 +53,7 @@ jobQueue.on("ready", () => {
          * --timeout=: Time out. For python, we need to add 3s for startup time.
          * python3: Run python3
          */
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 python3 ${
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=${memoryLim} --timeout=${timeLim} python3 ${
           file.path
         }`;
         queue = execPyQueue;
@@ -67,7 +71,7 @@ jobQueue.on("ready", () => {
         await exec(`rm ${file.path}.cpp`);
 
         console.log("C++ compiled.");
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=134217728 --timeout=00:00:04 ${
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=${memoryLim} --timeout=${timeLim} ${
           file.path
         }`;
         queue = execCppQueue;

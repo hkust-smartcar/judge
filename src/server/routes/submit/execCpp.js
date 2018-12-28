@@ -1,6 +1,6 @@
 const Queue = require("bee-queue");
 const exec = require("await-exec");
-const { MemoryError, TimeError } = require("./error");
+const { MemoryError, TimeError, RuntimeError } = require("./error");
 
 const execCppQueue = new Queue("execCpp", {
   removeOnSuccess: true,
@@ -23,7 +23,7 @@ execCppQueue.on("ready", () => {
         // code 1 means firejail terminated the procedure => time limit exceeded
         throw new TimeError();
       } else {
-        throw new MemoryError();
+        throw new RuntimeError();
       }
     });
 

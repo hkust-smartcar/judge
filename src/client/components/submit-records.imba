@@ -1,5 +1,6 @@
+import {store} from '../lib/store'
 export tag SubmitRecords
-  prop submits default: []
+  prop submits default: store:submits
   prop page default: 1
   prop isAdmin default: no
   prop useridfilter default: -1

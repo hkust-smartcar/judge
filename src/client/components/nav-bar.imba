@@ -5,7 +5,7 @@ export tag NavBar
   def render
     <self.navbar.navbar-expand-lg.navbar-dark.bg-primary.bd-navbar css:color="white">
       <a.navbar-brand href='/'> "Judge"
-      <div.row>
+      <div css:display="flex">
         <a.nav-link href='/questions'> "Questions"
         if store:user
           <div.btn-group>

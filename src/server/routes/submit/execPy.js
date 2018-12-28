@@ -1,12 +1,6 @@
 const Queue = require("bee-queue");
 const exec = require("await-exec");
-const {
-  InvalidTypeError,
-  RuntimeError,
-  MemoryError,
-  TimeError,
-  CompilationError
-} = require("./error");
+const { RuntimeError, MemoryError, TimeError } = require("./error");
 
 const execPyQueue = new Queue("execPy", {
   removeOnSuccess: true,

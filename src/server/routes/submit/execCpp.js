@@ -1,12 +1,6 @@
 const Queue = require("bee-queue");
 const exec = require("await-exec");
-const {
-  InvalidTypeError,
-  RuntimeError,
-  MemoryError,
-  TimeError,
-  CompilationError
-} = require("./error");
+const { MemoryError, TimeError } = require("./error");
 
 const execCppQueue = new Queue("execCpp", {
   removeOnSuccess: true,

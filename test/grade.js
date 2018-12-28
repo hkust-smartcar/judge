@@ -1,7 +1,7 @@
 const {
-  cornerMatchLoss,
+  pointMatchLoss,
   matchPair
-} = require("../src/server/routes/submit/grade");
+} = require("../src/server/routes/submit/grade/pointwise");
 const assert = require("assert");
 
 describe("true", function() {
@@ -10,7 +10,7 @@ describe("true", function() {
   });
 });
 
-describe("cornerMatchLoss", function() {
+describe("pointMatchLoss", function() {
   it("very good marriage", function() {
     const ans = [[2, 2], [3, 3]];
     const res = [[2, 2], [3, 3]];
@@ -41,18 +41,18 @@ describe("cornerMatchLoss", function() {
   it("grade perfect", function() {
     const ans = [[2, 2], [3, 3]];
     const res = [[2, 2], [3, 3]];
-    assert.equal(cornerMatchLoss(res, ans, 1), 0);
+    assert.equal(pointMatchLoss(res, ans, 1), 1);
   });
 
   it("grade miss ans", function() {
     const ans = [[2, 2], [3, 3], [4, 4]];
     const res = [[2, 2], [3, 3]];
-    assert.equal(cornerMatchLoss(res, ans, 1), 1);
+    assert.equal(pointMatchLoss(res, ans, 1), 0.802624679775096);
   });
 
   it("grade extra ans", function() {
     const ans = [[2, 2], [3, 3]];
     const res = [[2, 2], [3, 3], [4, 4]];
-    assert.equal(cornerMatchLoss(res, ans, 1), 1);
+    assert.equal(pointMatchLoss(res, ans, 1), 0.802624679775096);
   });
 });

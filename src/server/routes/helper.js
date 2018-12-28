@@ -1,6 +1,6 @@
 /**
  * get user object from express session, false if not logged in
- * @param {ExpressJS reqest object} req
+ * @param {Request} req
  */
 const getSessionUser = req => {
   return (req.session.passport && req.session.passport.user) || false;
@@ -11,4 +11,12 @@ const getSessionUser = req => {
  */
 const isAdmin = user => true;
 
-module.exports = { getSessionUser, isAdmin };
+/**
+ * Round $num to $dp decimal points
+ *
+ * @param {Number} num
+ * @param {Number} dp
+ */
+const round = (num, dp = 2) => (dp = 10 ** dp && Math.round(num * dp) / dp);
+
+module.exports = { getSessionUser, isAdmin, round };

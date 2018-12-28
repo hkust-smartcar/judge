@@ -43,3 +43,11 @@ body {
   margin: 0.5rem;
   border-radius: 0.5rem;
 }
+
+.toast-alert > .snackbar-content {
+  background: #f44336;
+}
+
+.toast-success > .snackbar-content {
+  background: #4caf50;
+}

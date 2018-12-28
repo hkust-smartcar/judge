@@ -11,6 +11,8 @@ import {Submit} from './components/submit'
 import {NavBar} from './components/nav-bar'
 # import {ScoreBoard} from './page/score-board'
 
+import {alertHandler} from './lib/alert-handler'
+
 store:user = window:user && window:user:user
 
 if process:config.MODE === 'dev'
@@ -46,5 +48,6 @@ socket.on 'name' do |data|
 	console.log data
 socket.on 'alert' do |data|
 	console.log data
+	alertHandler data
 
 Imba.mount <App>

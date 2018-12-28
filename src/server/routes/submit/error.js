@@ -30,10 +30,22 @@ class CompilationError extends Error {
   }
 }
 
+class MissingFieldError extends Error {
+  /**
+   * `Missing ${whatField}`
+   *
+   * @param {String} whatField the missing field
+   */
+  constructor(whatField = "Some field") {
+    super(`Missing ${whatField}`);
+  }
+}
+
 module.exports = {
   InvalidTypeError,
   RuntimeError,
   MemoryError,
   TimeError,
-  CompilationError
+  CompilationError,
+  MissingFieldError
 };

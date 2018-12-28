@@ -8,7 +8,8 @@ const {
   RuntimeError,
   MemoryError,
   TimeError,
-  CompilationError
+  CompilationError,
+  MissingFieldError
 } = require("./error");
 
 const jobQueue = new Queue("job", {
@@ -22,6 +23,9 @@ const evaluate = require("./grade");
 
 jobQueue.on("ready", () => {
   jobQueue.process(async job => {
+    if (!job.data.files) {
+      throw new MissingFieldError("Submit Files");
+    }
     let file = job.data.files[0];
     let user = job.data.user;
     let qid = job.data.question_id;

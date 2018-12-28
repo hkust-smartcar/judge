@@ -24,16 +24,15 @@ router
   // POST submission file
   .post(upload.fields([{ name: "qid" }, { name: "myfile" }]), (req, res) => {
     // .post(upload.fields([{ name: "myfile", maxCount: 1 }]), (req, res) => {
-    // Create
-    console.log("POST submit", req.body);
-    console.log("files", req.files);
+    // console.log("POST submit", req.body);
+    // console.log("files", req.files);
     // console.log("body:", req.body);
+    // Create
     const job = jobQueue.createJob({
       user: req.user.id,
       files: req.files.myfile,
       question_id: req.body.qid // question id
     });
-
     // On job successful, emit socket
     job
 
@@ -52,13 +51,21 @@ router
         console.log(`job failed with error ${err.message}.`);
         io.to(req.user.id).emit("alert", {
           type: "result",
-          job_id: job.id,
+          submission_id: job.id,
           status: "Completed",
           error: err.message
         });
       })
 
-      .save();
+      .save()
+      .then(job => {
+        io.to(req.user.id).emit("alert", {
+          type: "message",
+          message: `Submit on question ${req.body.qid} received with jobid ${
+            job.id
+          }`
+        });
+      });
 
     return res.send("submitted");
   });

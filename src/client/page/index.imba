@@ -8,7 +8,7 @@ export tag Index
         <h1 css:margin="10px"> "Online Judging System"
         if !store:user
           <p> "You are not currently logged in, please log in"
-          <a.btn.btn-raised.btn-primary href="loging"> "login"
+          <a.btn.btn-raised.btn-primary href="/login"> "login"
         else 
           <p> "Hello {store:user:displayName}, you may submit your works at here"
           <Submit>

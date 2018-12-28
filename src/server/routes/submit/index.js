@@ -2,12 +2,12 @@ const express = require("express");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 const io = require("../../socket").getio();
-const client = require("../../mongo").getdb();
-var bodyParser = require("body-parser");
 
 const router = express.Router();
 
 const jobQueue = require("./queue");
+
+const { upsertSubmission } = require("./schema");
 
 // router.use(bodyParser.json());
 // router.use(bodyParser.urlencoded({ extended: true }));
@@ -38,23 +38,33 @@ router
 
       .on("succeeded", function(result) {
         console.log("completed job " + job.id + " result ", result);
-        io.to(req.user.id).emit("alert", {
-          type: "result",
-          submission_id: job.id,
+        let payload = {
+          submission_id: parseInt(job.id),
           question_id: parseInt(req.body.qid),
           status: "Pending"
+        };
+        io.to(req.user.id).emit("alert", {
+          type: "result",
+          ...payload
         });
+        // Save in DB
+        upsertSubmission(payload);
       })
 
       // On job failure, emit socket
       .on("failed", err => {
         console.log(`job failed with error ${err.message}.`);
-        io.to(req.user.id).emit("alert", {
-          type: "result",
-          submission_id: job.id,
+        let payload = {
+          submission_id: parseInt(job.id),
           status: "Completed",
           error: err.message
+        };
+        io.to(req.user.id).emit("alert", {
+          type: "result",
+          ...payload
         });
+        // Save in DB
+        upsertSubmission(payload);
       })
 
       .save()

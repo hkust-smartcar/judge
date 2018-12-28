@@ -2,12 +2,8 @@ const questions = require("../../../../questions.json");
 const Queue = require("bee-queue");
 const exec = require("await-exec");
 const io = require("../../socket").getio();
-const client = require("../../mongo").getdb();
 const {
   InvalidTypeError,
-  RuntimeError,
-  MemoryError,
-  TimeError,
   CompilationError,
   MissingFieldError
 } = require("./error");
@@ -16,6 +12,8 @@ const jobQueue = new Queue("job", {
   removeOnSuccess: true,
   removeOnFailure: true
 });
+
+const { upsertSubmission, saveExecution } = require("./schema");
 
 const execPyQueue = require("./execPy");
 const execCppQueue = require("./execCpp");
@@ -79,10 +77,17 @@ jobQueue.on("ready", () => {
         return new InvalidTypeError();
     }
 
+    let processedDataset = 0; // count number of dataset completed per subtask
+    let totalScore = 0; // total score achieved in this submission
+    let totalDataset = subtasks // total number of datasets
+      .map(s => s["dataset"].length)
+      .reduce((acc, cur) => acc + cur);
+
     for (subtask of subtasks) {
       for (dataset of subtask["dataset"]) {
         let output = dataset["output"];
         let maxScore = dataset["points"];
+
         console.log(
           `Handling input ${dataset["input"]} with output ${dataset["output"]}`
         );
@@ -97,29 +102,77 @@ jobQueue.on("ready", () => {
 
           .on("succeeded", function(result) {
             console.log("completed job " + job.id + " result ", result);
-            io.to(user).emit("alert", {
-              type: "result",
-              submission_id: job.id,
-              job_id: execJob.id,
+            processedDataset++;
+            score = evaluate(result, output, questions[qid]["type"], maxScore);
+            totalScore += score;
+            let payload = {
+              submission_id: parseInt(job.id),
+              job_id: parseInt(execJob.id),
               question_id: parseInt(qid),
               subtask_id: subtask["id"],
               status: "Completed",
-              score: evaluate(result, output, questions[qid]["type"], maxScore)
+              score
+            };
+
+            io.to(user).emit("alert", {
+              type: "result",
+              ...payload
             });
+
+            saveExecution(payload);
+
+            // if this is the last execution in the submission
+            if (processedDataset === totalDataset) {
+              let payload = {
+                submission_id: parseInt(job.id),
+                question_id: parseInt(qid),
+                status: "Completed",
+                score: totalScore
+              };
+              io.to(user).emit("alert", {
+                type: "result",
+                ...payload
+              });
+
+              upsertSubmission(payload);
+            }
           })
 
           // On job failure, emit socket
           .on("failed", err => {
             console.log(`job failed with error ${err.message}.`);
-            io.to(user).emit("alert", {
-              type: "result",
-              submission_id: job.id,
-              job_id: execJob.id,
+            processedDataset++;
+            let payload = {
+              submission_id: parseInt(job.id),
+              job_id: parseInt(execJob.id),
               question_id: parseInt(qid),
               subtask_id: subtask["id"],
               status: "Completed",
               error: err.message
+            };
+
+            io.to(user).emit("alert", {
+              type: "result",
+              ...payload
             });
+
+            saveExecution(payload);
+
+            // if this is the last execution in the submission
+            if (processedDataset === totalDataset) {
+              let payload = {
+                submission_id: parseInt(job.id),
+                question_id: parseInt(qid),
+                status: "Completed",
+                score: totalScore
+              };
+              io.to(user).emit("alert", {
+                type: "result",
+                ...payload
+              });
+
+              upsertSubmission(payload);
+            }
           })
 
           .save();

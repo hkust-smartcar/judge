@@ -1,19 +1,17 @@
-var client;
+var mongoose = require("mongoose");
 
 const init = async () => {
-  let MongoClient = require("mongodb").MongoClient;
-  let uri = "mongodb://localhost:27017/judge";
-  client = new MongoClient(uri, { useNewUrlParser: true });
-  await new Promise((resolve, reject) => {
-    client.connect(err => {
-      console.log(err || "no error connecting mongo");
-      resolve(client);
+  await mongoose
+    .connect("mongodb://localhost:27017/judge")
+    .then(() => {
+      console.log("mongooese connected");
+    })
+    .catch(err => {
+      console.log(`mongooese connection failed with error ${err}`);
     });
-  });
-  return client;
 };
 
 module.exports = {
   init,
-  getdb: () => client
+  getdb: () => mongoose
 };

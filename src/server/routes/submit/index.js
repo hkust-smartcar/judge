@@ -31,7 +31,8 @@ router
     const job = jobQueue.createJob({
       user: req.user.id,
       files: req.files.myfile,
-      question_id: req.body.qid // question id
+      question_id: req.body.qid, // question id
+      startTime: Date.now() // Job start time
     });
     // On job successful, emit socket
     job
@@ -39,9 +40,12 @@ router
       .on("succeeded", function(result) {
         console.log("completed job " + job.id + " result ", result);
         let payload = {
+          user_id: parseInt(req.user.id),
           submission_id: parseInt(job.id),
           question_id: parseInt(req.body.qid),
-          status: "Pending"
+          status: "Pending",
+          startTime: job.data.startTime,
+          endTime: Date.now()
         };
         io.to(req.user.id).emit("alert", {
           type: "result",
@@ -55,9 +59,12 @@ router
       .on("failed", err => {
         console.log(`job failed with error ${err.message}.`);
         let payload = {
+          user_id: parseInt(req.user.id),
           submission_id: parseInt(job.id),
           status: "Completed",
-          error: err.message
+          error: err.message,
+          startTime: job.data.startTime,
+          endTime: Date.now()
         };
         io.to(req.user.id).emit("alert", {
           type: "result",

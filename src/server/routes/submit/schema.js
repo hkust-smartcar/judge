@@ -6,11 +6,14 @@ var mongoose = require("../../mongo").getdb();
  * @class Submission
  */
 var submissionSchema = new mongoose.Schema({
+  user_id: Number, // User ID
   submission_id: Number, // ID generated when put into submission queue
   question_id: Number, // Question ID
   status: String, // Could be 'Pending', 'Completed'
   score: Number, // Score
-  error: String // Could be 'Compilation Error'
+  error: String, // Could be 'Compilation Error'
+  startTime: Date,
+  endTime: Date
 });
 
 var Submission = mongoose.model("Submission", submissionSchema);
@@ -35,13 +38,16 @@ var upsertSubmission = obj => {
  * @class Execution
  */
 var executionSchema = new mongoose.Schema({
+  user_id: Number,
   submission_id: Number,
   job_id: Number,
   question_id: Number,
   subtask_id: Number,
   status: String,
   score: Number,
-  error: String
+  error: String,
+  startTime: Date,
+  endTime: Date
 });
 
 var Execution = mongoose.model("Execution", executionSchema);

@@ -97,8 +97,9 @@ jobQueue.on("ready", () => {
         );
         // Create job
         const execJob = queue.createJob({
-          cmd,
-          input: dataset["input"]
+          cmd, // exec command
+          input: dataset["input"], //data input
+          startTime: Date.now() // Job start time
         });
 
         // On job successful, emit socket
@@ -110,12 +111,15 @@ jobQueue.on("ready", () => {
             score = evaluate(result, output, questions[qid]["type"], maxScore);
             totalScore += score;
             let payload = {
+              user_id: parseInt(user),
               submission_id: parseInt(job.id),
               job_id: parseInt(execJob.id),
               question_id: parseInt(qid),
               subtask_id: subtask["id"],
               status: "Completed",
-              score
+              score,
+              startTime: execJob.data.startTime,
+              endTime: Date.now()
             };
 
             io.to(user).emit("alert", {
@@ -128,10 +132,13 @@ jobQueue.on("ready", () => {
             // if this is the last execution in the submission
             if (processedDataset === totalDataset) {
               let payload = {
+                user_id: parseInt(user),
                 submission_id: parseInt(job.id),
                 question_id: parseInt(qid),
                 status: "Completed",
-                score: totalScore
+                score: totalScore,
+                startTime: execJob.data.startTime,
+                endTime: Date.now()
               };
               io.to(user).emit("alert", {
                 type: "result",
@@ -147,12 +154,15 @@ jobQueue.on("ready", () => {
             console.log(`job failed with error ${err.message}.`);
             processedDataset++;
             let payload = {
+              user_id: parseInt(user),
               submission_id: parseInt(job.id),
               job_id: parseInt(execJob.id),
               question_id: parseInt(qid),
               subtask_id: subtask["id"],
               status: "Completed",
-              error: err.message
+              error: err.message,
+              startTime: execJob.data.startTime,
+              endTime: Date.now()
             };
 
             io.to(user).emit("alert", {
@@ -165,10 +175,13 @@ jobQueue.on("ready", () => {
             // if this is the last execution in the submission
             if (processedDataset === totalDataset) {
               let payload = {
+                user_id: parseInt(user),
                 submission_id: parseInt(job.id),
                 question_id: parseInt(qid),
                 status: "Completed",
-                score: totalScore
+                score: totalScore,
+                startTime: execJob.data.startTime,
+                endTime: Date.now()
               };
               io.to(user).emit("alert", {
                 type: "result",

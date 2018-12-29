@@ -61,6 +61,7 @@ router
         let payload = {
           user_id: parseInt(req.user.id),
           submission_id: parseInt(job.id),
+          question_id: parseInt(req.body.qid),
           status: "Completed",
           error: err.message,
           startTime: job.data.startTime,

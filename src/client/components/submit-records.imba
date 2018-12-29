@@ -32,22 +32,25 @@ export tag SubmitRecords
         <table.table.table-striped>
           <thead.thead-dark>
             <tr>
-              <th> "id"
+              <th> "ID"
               if @isAdmin
-                <th> "uid"
-              <th> "time"
-              <th> "qid"
-              <th> "score"
-              <th> "runtime"
-              <th> "state"
+                <th> "UID"
+              <th> "Start Time"
+              <th> "Question"
+              <th> "Score"
+              <th> "End Time"
+              <th> "Status"
           <tbody>
             for submit in submits
               <tr>
-                <td> submit:_id.slice(0,6)
+                <td> submit:_id.slice(-6)
                 if @isAdmin
                   <td> submit:user_id
-                <td> submit:submit_time
+                <td> submit:startTime
                 <td> submit:question_id
-                <td> submit:score
-                <td> submit:runtime
-                <td> submit:state
+                if submit:score == null
+                  <td> submit:error
+                else
+                  <td> submit:score
+                <td> submit:endTime
+                <td> submit:status

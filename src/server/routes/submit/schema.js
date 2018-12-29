@@ -64,4 +64,4 @@ var saveExecution = obj => {
   });
 };
 
-module.exports = { upsertSubmission, saveExecution };
+module.exports = { upsertSubmission, saveExecution, Submission, Execution };

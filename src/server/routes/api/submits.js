@@ -1,24 +1,36 @@
 const express = require("express");
 const router = express.Router();
 const moment = require("moment");
-
+const { Submission, Execution } = require("../submit/schema");
 const { getSessionUser, isAdmin } = require("../helper");
 
-const generateDummy = userid => {
-  return Array(20)
-    .fill()
-    .map((_, k) => ({
-      _id: Buffer.from("" + Math.random() * 1000).toString("base64"),
-      question_id: 0,
-      user_id: userid || Math.floor(Math.random() * 20),
-      score: Math.floor(Math.random() * 1000),
-      runtime: Math.floor(Math.random() * 4000),
-      state: "some state",
-      source_code: "some path",
-      submit_time: moment(
-        Math.floor(Math.random() * 100000 - 50000) + Date.now()
-      )
-    }));
+/**
+ * Query submission details given a particular user ID.
+ *
+ * @param {String} user_id ID of user of interest
+ * @returns {Promise} Model.find promise
+ */
+const querySubmissions = user_id => {
+  if (user_id === undefined)
+    return Submission.find({}, null, { sort: { startTime: -1 } })
+      .exec()
+      .then(doc => {
+        // console.log(doc);
+        return doc;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  else
+    return Submission.find({ user_id }, null, { sort: { startTime: -1 } })
+      .exec()
+      .then(doc => {
+        // console.log(doc);
+        return doc;
+      })
+      .catch(err => {
+        console.log(err);
+      });
 };
 
 /**
@@ -29,17 +41,21 @@ const generateDummy = userid => {
  *
  * response from newest to oldest
  */
-router.route("/").get((req, res) => {
+router.route("/").get(async (req, res) => {
   const { userid, page = 1, all } = req.query;
   const user = getSessionUser(req);
   if (!!all && isAdmin(user)) {
-    res.json({ submits: generateDummy(), page, totalPages: 20 });
+    res.json({ submits: await querySubmissions(), page, totalPages: 20 });
   } else {
     let queryUserId = userid;
     if (!queryUserId) {
       queryUserId = user.id;
     }
-    res.json({ submits: generateDummy(queryUserId), page, totalPages: 20 });
+    res.json({
+      submits: await querySubmissions(queryUserId),
+      page,
+      totalPages: 20
+    });
   }
 });
 

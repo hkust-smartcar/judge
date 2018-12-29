@@ -137,7 +137,7 @@ jobQueue.on("ready", () => {
                 question_id: parseInt(qid),
                 status: "Completed",
                 score: totalScore,
-                startTime: execJob.data.startTime,
+                startTime: job.data.startTime,
                 endTime: Date.now()
               };
               io.to(user).emit("alert", {
@@ -161,7 +161,7 @@ jobQueue.on("ready", () => {
               subtask_id: subtask["id"],
               status: "Completed",
               error: err.message,
-              startTime: execJob.data.startTime,
+              startTime: job.data.startTime,
               endTime: Date.now()
             };
 

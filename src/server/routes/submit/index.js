@@ -44,8 +44,7 @@ router
           submission_id: parseInt(job.id),
           question_id: parseInt(req.body.qid),
           status: "Pending",
-          startTime: job.data.startTime,
-          endTime: Date.now()
+          startTime: job.data.startTime
         };
         io.to(req.user.id).emit("alert", {
           type: "result",

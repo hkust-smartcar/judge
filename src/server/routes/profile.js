@@ -5,7 +5,7 @@ router
   .route("/")
 
   .get((req, res) => {
-    if (!req.session.passport) res.redirect("/login");
+    if (!req.session.passport) return res.redirect("/login");
     return res.render("index.ejs", {
       user: JSON.stringify(req.session.passport),
       title: "Profile"

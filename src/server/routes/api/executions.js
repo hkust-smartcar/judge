@@ -5,36 +5,34 @@ const { Submission, Execution } = require("../submit/schema");
 const { getSessionUser, isAdmin } = require("../helper");
 
 /**
- * Query submission details given a particular user ID.
+ * Query execution details given a particular submission ID.
  *
- * @param {String} user_id ID of user of interest
+ * @param {String} submission_id ID of submission of interest
  * @param {Number} page Page number
  * @returns {Promise} Model.find promise
  */
-const querySubmissions = (user_id, page = 1) => {
-  if (user_id === undefined)
-    return Submission.find({}, null, {
+const queryExecutions = (submission_id, page = 1) => {
+  if (submission_id === undefined)
+    return Execution.find({}, null, {
       sort: { startTime: -1 },
       skip: 20 * (page - 1),
       limit: 20
     })
       .exec()
       .then(doc => {
-        // console.log(doc);
         return doc;
       })
       .catch(err => {
         console.log(err);
       });
   else
-    return Submission.find({ user_id }, null, {
+    return Execution.find({ submission_id }, null, {
       sort: { startTime: -1 },
       skip: 20 * (page - 1),
       limit: 20
     })
       .exec()
       .then(doc => {
-        // console.log(doc);
         return doc;
       })
       .catch(err => {
@@ -44,27 +42,30 @@ const querySubmissions = (user_id, page = 1) => {
 
 /**
  * query parameters:
- * userid: submits of which user to display, if not sepecified it is logged in user, not logged in error
- * page: for infinite loading, each page contains 20 submits. Not specified than page 1
- * all: to display all users' submits, need admin previllage
+ * submission_id: submission id for execution query
+ * page: for infinite loading, each page contains 20 execution results. Not specified than page 1
+ * all: to display all users' executions, need admin previllage
  *
  * response from newest to oldest
  */
 router.route("/").get(async (req, res) => {
-  const { userid, page = 1, all } = req.query;
+  const { submission_id, page = 1, all } = req.query;
   const user = getSessionUser(req);
   if (!!all && isAdmin(user)) {
-    res.json({ submits: await querySubmissions(), page, totalPages: 20 });
+    res.json({ executions: await queryExecutions(), page, totalPages: 20 });
   } else {
-    let queryUserId = userid;
-    if (!queryUserId) {
-      queryUserId = user.id;
+    if (!submission_id) {
+      return res.json({
+        error:
+          "GET param submission_id is required if all=false or user not admin"
+      });
+    } else {
+      res.json({
+        executions: await queryExecutions(submission_id),
+        page,
+        totalPages: 20
+      });
     }
-    res.json({
-      submits: await querySubmissions(queryUserId),
-      page,
-      totalPages: 20
-    });
   }
 });
 

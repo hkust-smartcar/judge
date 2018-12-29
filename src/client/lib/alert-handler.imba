@@ -6,9 +6,7 @@ export def alertHandler object
     snackbar object:message
   else if type == 'result'
     if object:error
-      if object:subtask_id
-        snackbar "Submit {object:submission_id} have error: {object:error} at subtask {object:subtask_id}",'alert'
-      else
+      if !object:subtask_id
         snackbar "Submit {object:submission_id} have error: {object:error}",'alert'
     else if object:status == 'Pending'
       snackbar "Submit {object:submission_id} pending for grading"

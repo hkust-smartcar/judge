@@ -32,6 +32,7 @@ const evaluate = (pred, exp, type, maxScore) => {
       return pointMatchLoss(pred, exp, maxScore) || 0;
       break;
     default:
+      return 'no ready yet'
       // default as normal IO
       break;
   }

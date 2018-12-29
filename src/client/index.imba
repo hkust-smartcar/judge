@@ -2,7 +2,7 @@ require 'imba-router'
 var io = require 'socket.io-client'
 var socket = io process:config.HOST
 import {store} from './lib/store'
-# store:socket = socket
+store:socket = socket
 import {Index} from './page/index'
 import {Profile} from './page/profile'
 import {Admin} from './page/admin'

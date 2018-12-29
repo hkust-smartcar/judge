@@ -34,6 +34,33 @@ const querySubmissions = user_id => {
 };
 
 /**
+ * Query execution details given a particular submission ID.
+ *
+ * @param {String} submission_id ID of submission of interest
+ * @returns {Promise} Model.find promise
+ */
+const queryExecutions = submission_id => {
+  if (submission_id === undefined)
+    return Execution.find({}, null, { sort: { startTime: -1 } })
+      .exec()
+      .then(doc => {
+        return doc;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  else
+    return Execution.find({ submission_id }, null, { sort: { startTime: -1 } })
+      .exec()
+      .then(doc => {
+        return doc;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+};
+
+/**
  * query parameters:
  * userid: submits of which user to display, if not sepecified it is logged in user, not logged in error
  * page: for infinite loading, each page contains 20 submits. Not specified than page 1

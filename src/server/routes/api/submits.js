@@ -8,11 +8,16 @@ const { getSessionUser, isAdmin } = require("../helper");
  * Query submission details given a particular user ID.
  *
  * @param {String} user_id ID of user of interest
+ * @param {Number} page Page number
  * @returns {Promise} Model.find promise
  */
-const querySubmissions = user_id => {
+const querySubmissions = (user_id, page = 1) => {
   if (user_id === undefined)
-    return Submission.find({}, null, { sort: { startTime: -1 } })
+    return Submission.find({}, null, {
+      sort: { startTime: -1 },
+      skip: 20 * (page - 1),
+      limit: 20
+    })
       .exec()
       .then(doc => {
         // console.log(doc);
@@ -22,7 +27,11 @@ const querySubmissions = user_id => {
         console.log(err);
       });
   else
-    return Submission.find({ user_id }, null, { sort: { startTime: -1 } })
+    return Submission.find({ user_id }, null, {
+      sort: { startTime: -1 },
+      skip: 20 * (page - 1),
+      limit: 20
+    })
       .exec()
       .then(doc => {
         // console.log(doc);
@@ -37,11 +46,16 @@ const querySubmissions = user_id => {
  * Query execution details given a particular submission ID.
  *
  * @param {String} submission_id ID of submission of interest
+ * @param {Number} page Page number
  * @returns {Promise} Model.find promise
  */
-const queryExecutions = submission_id => {
+const queryExecutions = (submission_id, page = 1) => {
   if (submission_id === undefined)
-    return Execution.find({}, null, { sort: { startTime: -1 } })
+    return Execution.find({}, null, {
+      sort: { startTime: -1 },
+      skip: 20 * (page - 1),
+      limit: 20
+    })
       .exec()
       .then(doc => {
         return doc;
@@ -50,7 +64,11 @@ const queryExecutions = submission_id => {
         console.log(err);
       });
   else
-    return Execution.find({ submission_id }, null, { sort: { startTime: -1 } })
+    return Execution.find({ submission_id }, null, {
+      sort: { startTime: -1 },
+      skip: 20 * (page - 1),
+      limit: 20
+    })
       .exec()
       .then(doc => {
         return doc;

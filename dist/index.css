@@ -51,3 +51,9 @@ body {
 .toast-success > .snackbar-content {
   background: #4caf50;
 }
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}

@@ -9,7 +9,8 @@ const getSessionUser = req => {
 /**
  * return whether a user is admin
  */
-const isAdmin = user => true;
+const isAdmin = user =>
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].indexOf(Number(user.id)) !== -1;
 
 /**
  * Round $num to $dp decimal points

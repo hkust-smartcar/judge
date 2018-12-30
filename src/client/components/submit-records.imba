@@ -5,6 +5,7 @@ var moment = require('moment')
 export tag SubmitRecords
   prop submits default: store:submits
   prop page default: 1
+  prop exePage default: 1
   prop isAdmin default: no
   prop useridfilter default: -1
   prop qid_filter default: -1
@@ -18,9 +19,9 @@ export tag SubmitRecords
       if data:type == 'result'
         if @page == 1
           if data:subtask_id == undefined
-            console.log('b4',@submits,data)
+            # console.log('b4',@submits,data)
             @submits = upsert(@submits, data, "submission_id")
-            console.log('ft',@submits)
+            # console.log('ft',@submits)
         if data:subtask_id
           if @show == yes
             if data:submission_id == @sid
@@ -35,7 +36,8 @@ export tag SubmitRecords
     @sid = 0
 
   def crawl page
-    var url = "/api/submits?page={page}"
+    @page=Math.max(@page,1)
+    var url = "/api/submits?page={@page}"
     if qid_filter != -1
       url += '&qid_filter='+qid_filter
     if @isAdmin
@@ -45,14 +47,15 @@ export tag SubmitRecords
         url += '&all=true'
     window:$.ajax({url: url}).done do |data|
       @submits = data:submits
-      console.log data
+      # console.log data
       Imba.commit
 
-  def crawlExe sid,page
-    var url = "/api/executions?submission_id={sid}&page={page}"
+  def crawlExe
+    @exePage=Math.max(@exePage,1)
+    var url = "/api/executions?submission_id={@sid}&page={@exePage}"
     window:$.ajax({url: url}).done do |data|
       @executions = data:executions
-      console.log data
+      # console.log data
       Imba.commit
   
   def viewDetails sid
@@ -65,6 +68,21 @@ export tag SubmitRecords
   def modalClose
     @show = no
 
+  def nextPage
+    @page++
+    crawl @page
+
+  def prevPage
+    @page=Math.max(--@page,1)
+    crawl @page
+
+  def nextExePage
+    @exePage++
+    crawlExe @exePage
+
+  def prevExePage
+    @exePage=Math.max(--@exePage,1)
+    crawlExe @exePage
   
   def render
     return 
@@ -76,9 +94,13 @@ export tag SubmitRecords
                 <h5.modal-title id="modalTitle"> "Execution Records of Submit {@sid}"
                 <button.close data-dismiss="modal">
               <div.modal-body>
-                <p>
-                  "Input Page Number"
-                  <input[@exePage] :change.crawlExe(@sid,@exePage)>
+                <div css:display="flex" css:justify-content="space-between">
+                  <p>
+                    "Input Page Number"
+                    <input[@exePage] :change.crawlExe(@sid,@exePage)>
+                  <div>
+                    <button.btn :tap.prevExePage> "Prev"
+                    <button.btn :tap.nextExePage> "Next"
                 <table.table>
                   <thead>
                     <tr>
@@ -98,6 +120,8 @@ export tag SubmitRecords
                         else
                           <td> exe:error
                         <td> exe:status
+                  <button.btn :tap.prevExePage> "Prev"
+                  <button.btn :tap.nextExePage> "Next"
               <div.modal-footer>
                 <button.btn.btn-secondary data-dismiss="modal"> "Close"
         <p>
@@ -106,6 +130,8 @@ export tag SubmitRecords
           if @isAdmin
             "filter userid(-1 for all)"
             <input[useridfilter] :change.crawl(@page)>
+          <button.btn :tap.prevPage> "Prev"
+          <button.btn :tap.nextPage> "Next"
         <table.table.table-striped>
           <thead.thead-dark>
             <tr>
@@ -134,3 +160,6 @@ export tag SubmitRecords
                 <td> submit:status
                 <td>
                   <a.btn.btn-raised.btn-primary :tap.viewDetails(submit:submission_id) href="#col{submit:submission_id}"> "details"
+                  
+        <button.btn :tap.prevPage> "Prev"
+        <button.btn :tap.nextPage> "Next"

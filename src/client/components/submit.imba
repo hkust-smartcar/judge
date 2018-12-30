@@ -1,7 +1,7 @@
 import {snackbar} from '../lib/snackbar-factory'
 
 export tag Submit
-  prop qid default:1
+  prop qid default:0
   prop temp_disable default: no
 
   def submit

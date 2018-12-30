@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+const logger = require("./logger")("mongo");
 
 const init = async () => {
   await mongoose
@@ -7,10 +8,10 @@ const init = async () => {
       { useNewUrlParser: true }
     )
     .then(() => {
-      console.log("mongooese connected");
+      logger.info("mongooese connected");
     })
     .catch(err => {
-      console.log(`mongooese connection failed with error ${err}`);
+      logger.error(`mongooese connection failed with error ${err}`);
     });
 };
 

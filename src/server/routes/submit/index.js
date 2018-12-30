@@ -1,4 +1,5 @@
 const express = require("express");
+const logger = require("../../logger")("queue");
 const multer = require("multer");
 const upload = multer({
   dest: "uploads/",
@@ -30,11 +31,7 @@ router
 
   // POST submission file
   .post(upload.fields([{ name: "qid" }, { name: "myfile" }]), (req, res) => {
-    // .post(upload.fields([{ name: "myfile", maxCount: 1 }]), (req, res) => {
-    // console.log("POST submit", req.body);
-    // console.log("files", req.files);
-    // console.log("body:", req.body);
-    // Create
+    // Create Job
     const job = jobQueue.createJob({
       user: req.user.id,
       files: req.files.myfile,
@@ -45,7 +42,11 @@ router
     job
 
       .on("succeeded", function(result) {
-        console.log("completed job " + job.id + " result ", result);
+        logger.info(
+          `Handling job ${job.id} of user ${job.data.user}, question ${
+            job.data.question_id
+          } and filename ${job.data.files[0].path}`
+        );
         let payload = {
           user_id: parseInt(req.user.id),
           submission_id: parseInt(job.id),
@@ -64,7 +65,7 @@ router
 
       // On job failure, emit socket
       .on("failed", err => {
-        console.log(`job failed with error ${err.message}.`);
+        logger.info(`job failed with error ${err.message}.`);
         let payload = {
           user_id: parseInt(req.user.id),
           submission_id: parseInt(job.id),

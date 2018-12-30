@@ -1,4 +1,5 @@
 var mongoose = require("../mongo").getdb();
+const logger = require("../logger")("mongo");
 
 /**
  * Schema for submission details.
@@ -28,7 +29,7 @@ var upsertSubmission = obj => {
     submission_id: obj["submission_id"]
   };
   Submission.findOneAndUpdate(query, obj, { upsert: true }, (err, doc) => {
-    if (err) console.log("Error when saving mongoose:", err.message);
+    if (err) logger.error("Error when saving mongoose:", err.message);
   });
 };
 
@@ -60,7 +61,7 @@ var Execution = mongoose.model("Execution", executionSchema);
 var saveExecution = obj => {
   exe = new Execution(obj);
   exe.save((err, doc) => {
-    if (err) console.log("Error when saving mongoose:", err.message);
+    if (err) logger.error("Error when saving mongoose:", err.message);
   });
 };
 

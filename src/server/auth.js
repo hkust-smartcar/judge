@@ -1,6 +1,7 @@
 const passport = require("passport");
 const express = require("express");
 const session = require("express-session");
+const logger = require("./logger")("passport");
 const { upsertUser } = require("./routes/schema");
 
 const init = app => {
@@ -49,14 +50,14 @@ const init = app => {
         callbackURL: appconfig.host + "/login/oidc/callback"
       },
       (iss, sub, profile, jwtClaims, accessToken, refreshToken, params, cb) => {
-        console.log(profile && profile.displayName + " logged in");
+        logger.info(profile && profile.displayName + " logged in");
         upsertUser({ user_id: profile.id, displayName: profile.displayName });
         return cb(null, profile) || true;
       }
     )
   );
 
-  console.log("auth init");
+  logger.info("auth init");
 };
 
 module.exports = init;

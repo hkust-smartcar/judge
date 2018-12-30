@@ -1,15 +1,15 @@
 var config = require("../../config")(process.env.NODE_ENV);
+const logger = require("./logger")("server");
 process.config = config;
 var express = require("express");
 var app = express();
 const engine = require("ejs-locals");
 var port = process.config.PORT || 8080;
 var s = app.listen(port, () => {
-  console.log("server is running on port " + port);
+  logger.info("server is running on port " + port);
 });
 var server = require("http").createServer(app);
 var io = require("./socket").init(s);
-console.log("socket io init");
 const assert = require("assert");
 var bodyParser = require("body-parser");
 const passport = require("passport");
@@ -56,8 +56,8 @@ const initExpress = () => {
   app.use(passport.session());
   app.use(require("./routes"));
   app.post("/test", (req, res) => {
-    console.log(req);
-    console.log(req.body);
+    logger.debug(req);
+    logger.debug(req.body);
     // res.json(req);
     res.send("test");
   });

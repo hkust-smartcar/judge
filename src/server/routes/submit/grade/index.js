@@ -1,5 +1,6 @@
 const { pointMatchLoss } = require("./pointwise.js");
 const { WrongInputFormat } = require("../error");
+const logger = require("../../../logger")("socket");
 
 /**
  * @param {string} pred Output from user's code
@@ -13,7 +14,7 @@ const evaluate = (pred, exp, type, maxScore) => {
   switch (type) {
     case "IOPointwise":
       if (!pred.match(/(\d+)( \d+(.\d+)?)*/)) {
-        console.log("wrong format: ", pred);
+        logger.info("Submission has wrong format.");
         throw new WrongInputFormat();
       }
       pred = pred
@@ -35,14 +36,9 @@ const evaluate = (pred, exp, type, maxScore) => {
           resultArray[chunkIndex].push(item);
           return resultArray;
         }, []);
-      // console.log({ pred, exp });
       return pointMatchLoss(pred, exp, maxScore) || 0;
-      break;
     default:
-      // console.log({ pred, exp });
       return (pred == exp) * maxScore;
-      // default as normal IO
-      break;
   }
 };
 

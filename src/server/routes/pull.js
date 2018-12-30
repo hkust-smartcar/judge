@@ -1,21 +1,22 @@
 var express = require("express");
 var router = express.Router();
 const { exec } = require("child_process");
+const logger = require("../logger")("pull");
 
 router
   .route("/")
 
   .post((req, res) => {
-    console.log("[pull/]: request for pull, running git pull...");
+    logger.info("request for pull, running git pull...");
     exec("git pull", (...params) => {
-      console.log("[pull/]: git pull done with result ", params);
-      console.log("[pull/]: running npm i");
+      logger.info("git pull done with result ", params);
+      logger.info("running npm i");
       res.send(params);
       exec("npm i", (...params) => {
-        console.log("[pull/]: npm i done with result ", params);
-        console.log("[pull/]: running pm2 restart 1");
+        logger.info("npm i done with result ", params);
+        logger.info("running pm2 restart 1");
         exec("pm2 restart 1", (...params) => {
-          console.log("[pull/]: pm2 restart 1 done with result ", params); //but seems this line will never happen
+          logger.info("pm2 restart 1 done with result ", params); //but seems this line will never happen
         });
       });
     });

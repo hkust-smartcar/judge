@@ -35,11 +35,11 @@ const evaluate = (pred, exp, type, maxScore) => {
           resultArray[chunkIndex].push(item);
           return resultArray;
         }, []);
-      console.log({ pred, exp });
+      // console.log({ pred, exp });
       return pointMatchLoss(pred, exp, maxScore) || 0;
       break;
     default:
-      console.log({ pred, exp });
+      // console.log({ pred, exp });
       return (pred == exp) * maxScore;
       // default as normal IO
       break;

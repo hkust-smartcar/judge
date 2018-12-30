@@ -16,7 +16,7 @@ const jobQueue = new Queue("job", {
 
 const { sec2str } = require("../helper");
 
-const { upsertSubmission, saveExecution } = require("./schema");
+const { upsertSubmission, saveExecution } = require("../schema");
 
 const execPyQueue = require("./execPy");
 const execCppQueue = require("./execCpp");

@@ -1,4 +1,4 @@
-var mongoose = require("../../mongo").getdb();
+var mongoose = require("../mongo").getdb();
 
 /**
  * Schema for submission details.
@@ -64,4 +64,37 @@ var saveExecution = obj => {
   });
 };
 
-module.exports = { upsertSubmission, saveExecution, Submission, Execution };
+/**
+ * Schema for storing user.
+ *
+ * @class User
+ */
+var userSchema = new mongoose.Schema({
+  user_id: Number,
+  displayName: String
+});
+
+var User = mongoose.model("User", userSchema);
+
+/**
+ * Upserts an user object to the User collection.
+ *
+ * @param {Object} obj
+ */
+var upsertUser = obj => {
+  const query = {
+    user_id: obj["user_id"]
+  };
+  User.findOneAndUpdate(query, obj, { upsert: true }, (err, doc) => {
+    if (err) console.log("Error when saving mongoose:", err.message);
+  });
+};
+
+module.exports = {
+  upsertSubmission,
+  saveExecution,
+  upsertUser,
+  Submission,
+  Execution,
+  User
+};

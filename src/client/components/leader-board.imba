@@ -6,11 +6,19 @@ export tag LeaderBoard
     @page = 1
     @maxscores = []
     @qids = []
+    @users = {}
     crawl 1
     window:$.ajax({url: "/api/questions"}).done do |data|
       @qids = data.map(|d| d:id)
-    store:socket.on "scoreboard" do
+    window:$.ajax({url: "/api/users"}).done do |data|
+      data.forEach(|d| @users[d:user_id]=[d:displayName])
+      Imba.commit
+    store:socket.on "scoreboard" do |submit|
+      console.log submit
       crawl @page
+      window:$.ajax({url: "/api/users?user_id={submit:user_id}"}).done do |data|
+        data.forEach(|d| @users[d:user_id]=[d:displayName])
+        Imba.commit
     
   def crawl page
     let url = "/api/maxscores/?all=true&page={page}"
@@ -29,13 +37,15 @@ export tag LeaderBoard
           <thead>
             <tr>
               <th> "UID"
+              <th> "Name"
               <th> "Total"
               for q in @qids
-                <th> q
+                <th> "Question {q}"
           <tbody>
             for ms in  @maxscores
               <tr>
-                <td> ms:_id
+                <td> ms:user_id
+                <td> @users[ms:user_id]
                 <td> ms:totalScores
                 for q in @qids
                   <td> ms:questions[q] || 0

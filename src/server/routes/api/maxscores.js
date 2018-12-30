@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const moment = require("moment");
-const { Submission, Execution } = require("../submit/schema");
+const { Submission, Execution } = require("../schema");
 const { getSessionUser, isAdmin } = require("../helper");
 
 /**

@@ -9,5 +9,6 @@ router.use("/submits", require("./submits"));
 router.use("/questions", require("./questions"));
 router.use("/executions", require("./executions"));
 router.use("/maxscores", require("./maxscores"));
+router.use("/users", require("./users"));
 
 module.exports = router;

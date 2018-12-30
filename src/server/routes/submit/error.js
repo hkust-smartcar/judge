@@ -41,11 +41,18 @@ class MissingFieldError extends Error {
   }
 }
 
+class WrongInputFormat extends Error {
+  constructor() {
+    super(`Wrong Input Format`);
+  }
+}
+
 module.exports = {
   InvalidTypeError,
   RuntimeError,
   MemoryError,
   TimeError,
   CompilationError,
-  MissingFieldError
+  MissingFieldError,
+  WrongInputFormat
 };

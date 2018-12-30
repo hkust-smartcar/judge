@@ -108,7 +108,18 @@ jobQueue.on("ready", () => {
           .on("succeeded", function(result) {
             console.log("completed job " + job.id + " result ", result);
             processedDataset++;
-            score = evaluate(result, output, questions[qid]["type"], maxScore);
+            try {
+              score = evaluate(
+                result,
+                output,
+                questions[qid]["type"],
+                maxScore
+              );
+              error = null;
+            } catch (e) {
+              score = null;
+              error = e.message;
+            }
             totalScore += score;
             let payload = {
               user_id: parseInt(user),
@@ -118,6 +129,7 @@ jobQueue.on("ready", () => {
               subtask_id: subtask["id"],
               status: "Completed",
               score,
+              error,
               startTime: execJob.data.startTime,
               endTime: Date.now()
             };

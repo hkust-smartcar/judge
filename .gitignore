@@ -36,3 +36,5 @@ config.js
 uploads/
 
 .vscode
+
+questions.json

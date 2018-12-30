@@ -60,22 +60,26 @@ const queryMaxScores = user_id => {
 /**
  * query parameters:
  * user_id: return the score of corresponding user
- * all: to display all users' submits, need admin previllage
+ * all: to display all users' maxscores
  *
  * response from newest to oldest
  */
 router.route("/").get(async (req, res) => {
   const { userid, page = 1, all } = req.query;
   const user = getSessionUser(req);
-  if (!!all && isAdmin(user)) {
-    res.json({ maxScores: await queryMaxScores(), page, totalPages: 20 });
+  if (!!all) {
+    res.json({
+      maxScores: await queryMaxScores(undefined, page),
+      page,
+      totalPages: 20
+    });
   } else {
     let queryUserId = userid;
     if (!queryUserId) {
       queryUserId = user.id;
     }
     res.json({
-      maxScores: await queryMaxScores(queryUserId),
+      maxScores: await queryMaxScores(queryUserId, page),
       page,
       totalPages: 20
     });

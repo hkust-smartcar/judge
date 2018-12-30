@@ -52,7 +52,11 @@ router.route("/").get(async (req, res) => {
   const { submission_id, page = 1, all } = req.query;
   const user = getSessionUser(req);
   if (!!all && isAdmin(user)) {
-    res.json({ executions: await queryExecutions(), page, totalPages: 20 });
+    res.json({
+      executions: await queryExecutions(undefined, page),
+      page,
+      totalPages: 20
+    });
   } else {
     if (!submission_id) {
       return res.json({
@@ -61,7 +65,7 @@ router.route("/").get(async (req, res) => {
       });
     } else {
       res.json({
-        executions: await queryExecutions(submission_id),
+        executions: await queryExecutions(submission_id, page),
         page,
         totalPages: 20
       });

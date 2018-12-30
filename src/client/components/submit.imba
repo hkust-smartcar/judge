@@ -1,5 +1,5 @@
 export tag Submit
-  prop qid default:0
+  prop qid default:1
   prop temp_disable default: no
 
   def submit

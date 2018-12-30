@@ -166,6 +166,10 @@
         "explanation": "There are no corners."
       }
     ],
+    "code": {
+      "python": "import sys\nf=open(sys.argv[1]) # open file according to the input\n# ...some processing\nprint('4 54 162 74 5 23 56 3 5',end='')",
+      "cpp": "#include <iostream>\n#include <fstream>\nusing namespace std;\nint main(int argc, char* argv[]){\n  ifstream fin(argv[1]); //open the file\n  //... some processing\n  cout<<\"4 54 162 74 5 23 56 3 5\";\n}"
+    },
     "subtasks": [
       {
         "id": 0,
@@ -203,6 +207,10 @@
         "output": "hi"
       }
     ],
+    "code": {
+      "python": "import sys\nf=open(sys.argv[1]) # open file according to the input\n# ...some processing\nprint('4 54 162 74 5 23 56 3 5',end='')",
+      "cpp": "#include <iostream>\n#include <fstream>\nusing namespace std;\nint main(int argc, char* argv[]){\n  ifstream fin(argv[1]); //open the file\n  //... some processing\n  cout<<\"4 54 162 74 5 23 56 3 5\";\n}"
+    },
     "subtasks": [
       {
         "id": 0,

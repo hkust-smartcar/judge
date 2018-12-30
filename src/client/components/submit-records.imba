@@ -7,10 +7,14 @@ export tag SubmitRecords
   prop page default: 1
   prop isAdmin default: no
   prop useridfilter default: -1
+  prop qid_filter default: -1
 
   def setup
     crawl 1
     store:socket.on 'alert' do |data|
+      if qid_filter != -1
+        if qid_filter != data:question_id
+          return
       if data:type == 'result'
         if @page == 1
           if data:subtask_id == undefined
@@ -32,6 +36,8 @@ export tag SubmitRecords
 
   def crawl page
     var url = "/api/submits?page={page}"
+    if qid_filter != -1
+      url += '&qid_filter='+qid_filter
     if @isAdmin
       if @useridfilter != -1
         url += '&userid=' + @useridfilter

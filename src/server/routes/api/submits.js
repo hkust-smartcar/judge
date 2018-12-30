@@ -11,35 +11,28 @@ const { getSessionUser, isAdmin } = require("../helper");
  * @param {Number} page Page number
  * @returns {Promise} Model.find promise
  */
-const querySubmissions = (user_id, page = 1) => {
-  if (user_id === undefined)
-    return Submission.find({}, null, {
-      sort: { startTime: -1 },
-      skip: 20 * (page - 1),
-      limit: 20
+const querySubmissions = (user_id, page, question_id) => {
+  const query = {};
+
+  if (user_id !== undefined) {
+    query.user_id = user_id;
+  }
+  if (question_id !== undefined) {
+    query.question_id = question_id;
+  }
+  return Submission.find(query, null, {
+    sort: { startTime: -1 },
+    skip: 20 * (page - 1),
+    limit: 20
+  })
+    .exec()
+    .then(doc => {
+      // console.log(doc);
+      return doc;
     })
-      .exec()
-      .then(doc => {
-        // console.log(doc);
-        return doc;
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  else
-    return Submission.find({ user_id }, null, {
-      sort: { startTime: -1 },
-      skip: 20 * (page - 1),
-      limit: 20
-    })
-      .exec()
-      .then(doc => {
-        // console.log(doc);
-        return doc;
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 /**
@@ -51,11 +44,11 @@ const querySubmissions = (user_id, page = 1) => {
  * response from newest to oldest
  */
 router.route("/").get(async (req, res) => {
-  const { userid, page = 1, all } = req.query;
+  const { userid, page = 1, all, qid_filter } = req.query;
   const user = getSessionUser(req);
   if (!!all && isAdmin(user)) {
     res.json({
-      submits: await querySubmissions(undefined, page),
+      submits: await querySubmissions(undefined, page, qid_filter),
       page,
       totalPages: 20
     });
@@ -65,7 +58,7 @@ router.route("/").get(async (req, res) => {
       queryUserId = user.id;
     }
     res.json({
-      submits: await querySubmissions(queryUserId, page),
+      submits: await querySubmissions(queryUserId, page, qid_filter),
       page,
       totalPages: 20
     });

@@ -1,5 +1,6 @@
 import {store} from '../lib/store'
 import {Submit} from '../components/submit'
+import {SubmitRecords} from '../components/submit-records'
 
 export tag Question
   prop qid
@@ -53,6 +54,7 @@ export tag Question
                         <p> con
                     <td> st:points
         <Submit qid=@qid>
+        <SubmitRecords qid_filter=@qid>
 
 
 

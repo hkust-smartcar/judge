@@ -3,7 +3,7 @@ import {snackbar} from './snackbar-factory'
 export def alertHandler object
   const type = object:type
   if type == 'message'
-    snackbar object:message
+    snackbar object:message, object:type
   else if type == 'result'
     if object:error
       if !object:subtask_id

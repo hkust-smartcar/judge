@@ -57,6 +57,7 @@ router
           type: "result",
           ...payload
         });
+        io.emit("scoreboard", true);
         // Save in DB
         upsertSubmission(payload);
       })

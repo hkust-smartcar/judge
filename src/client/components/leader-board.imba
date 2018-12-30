@@ -1,4 +1,5 @@
 let maxScoreHelper = require('../lib/maxscore-helper')
+import {store} from '../lib/store'
 
 export tag LeaderBoard
   def setup
@@ -8,11 +9,14 @@ export tag LeaderBoard
     crawl 1
     window:$.ajax({url: "/api/questions"}).done do |data|
       @qids = data.map(|d| d:id)
+    store:socket.on "scoreboard" do
+      crawl @page
     
   def crawl page
     let url = "/api/maxscores/?all=true&page={page}"
     window:$.ajax({url: url}).done do |data|
       @maxscores = maxScoreHelper data:maxScores
+      Imba.commit
 
   def render
     return

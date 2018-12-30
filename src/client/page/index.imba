@@ -14,16 +14,17 @@ export tag Index
           <p> "Hello {store:user:displayName}, you may submit your works at here"
           <Submit>
         <h3> "About"
-        <p> "The Online Judging System supports C++ and Python submissions, and currently only hosted for corner detection challenge problems, and there maybe other question types in the future. Here are some points you need to notice:"
+        <p> "The Online Judging System supports C++ and Python submissions, and currently the only question hosted is the Corner Detection Challenge. There might be more questions coming in the future. Here are some points you need to notice:"
         <ol>
-          <li> "C++ compiler: g++11"
-          <li> "Python version: 3.6.7"
-          <li> "One file for each submittsion"
-          <li> "Source code upload cannot exceed 100kb as file size"
-          <li> "You code is runned by passing argument list"
-          <li> "You code is graded by reading the standard output"
-          <li> "Each problem has its own runtime limit and memory limit, please refer to question page"
-          <li> "No new line character at the output, this can lead to incorrect answer"
-          <li> "If there is any problem with this judging system, please contact Dipsy"
+          <li> "C++ codes are compiled with g++ 7.3.0 with --std=c++11 flag."
+          <li> "Python codes are run with Python version 3.6.7."
+          <li> "If you use Python, you may use the following libraries: numpy 1.14.3, opencv 3.4.1, pillow 5.1.0 and skimage 0.13.1."
+          <li> "One file only per submission."
+          <li> "Maximum file size allowed is 100 KB."
+          <li> "Read inputs through argument list."
+          <li> "Print outputs through STDOUT."
+          <li> "Each problem has its own time and memory limit, refer to question page for details."
+          <li> "Strip all line break characters in your output. Otherwise, it may be treated as incorrect."
+          <li> "If there is any problem with this judging system, please contact Dipsy."
 
         <LeaderBoard>

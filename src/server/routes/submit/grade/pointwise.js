@@ -22,13 +22,12 @@ const pointMatchLoss = (
     submittedAnswers.length - modelAnswers.length
   );
   return (
-    (1 -
+    ((1 -
       Math.tanh(
-        (pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) +
-          numOfUnmatched * unmatchPenalty) /
-          100
+        pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) / 100
       )) *
-    maxScore
+      maxScore) /
+    2 ** (numOfUnmatched)
   );
 };
 

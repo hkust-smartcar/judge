@@ -11,4 +11,7 @@ export def alertHandler object
     else if object:status == 'Pending'
       snackbar "Submit {object:submission_id} pending for grading"
     else if object:status == 'Completed'
-      snackbar "Submit {object:submission_id} scores {object:score} at subtask {object:subtask_id}","success"
+      if object:subtask_id == undefined
+        snackbar "Submit {object:submission_id} scores {object:score}","success"
+    else if object:status == 'Submitted'
+      snackbar "Submitted job {object:submission_id}"

@@ -76,12 +76,19 @@ router
 
       .save()
       .then(job => {
+        let payload = {
+          user_id: parseInt(req.user.id),
+          submission_id: parseInt(job.id),
+          question_id: parseInt(req.body.qid),
+          status: "Submitted",
+          startTime: job.data.startTime
+        };
         io.to(req.user.id).emit("alert", {
-          type: "message",
-          message: `Submit on question ${req.body.qid} received with jobid ${
-            job.id
-          }`
+          type: "result",
+          ...payload
         });
+        // Save in DB
+        upsertSubmission(payload);
       });
 
     return res.send("submitted");

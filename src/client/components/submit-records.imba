@@ -1,5 +1,7 @@
 import {store} from '../lib/store'
+var upsert = require('../lib/upsert.js')
 var moment = require('moment')
+
 export tag SubmitRecords
   prop submits default: store:submits
   prop page default: 1
@@ -9,9 +11,22 @@ export tag SubmitRecords
   def setup
     crawl 1
     store:socket.on 'alert' do |data|
-      if @page == 1
-        if !data:subtask_id
-          crawl 1
+      if data:type == 'result'
+        if @page == 1
+          if data:subtask_id == undefined
+            console.log('b4',@submits,data)
+            @submits = upsert(@submits, data, "submission_id")
+            console.log('ft',@submits)
+        if data:subtask_id
+          if @show == yes
+            if @exePage == 1
+              @executions = upsert(@executions,data,"job_id")
+      Imba.commit
+
+    window:$("#modal").modal()
+    @executions = []
+    @show = no
+    @exePage = 1
 
   def crawl page
     var url = "/api/submits?page={page}"
@@ -27,18 +42,41 @@ export tag SubmitRecords
   
   def viewDetails sid
     console.log('view details',sid)
-    var sb = @submits.filter(|submit| submit:submission_id == sid )
-    if sb:length==1
-      sb=sb[0]
-      if sb:execution
-        window:$("#col{sid}").collapse('toggle')
-      else
-        window:$("#col{sid}").collapse()
-        sb:execution = true
+    window:$("#modal").modal('toggle')
+    @show = yes
 
+  def modalClose
+    @show = no
+
+  
   def render
     return 
       <self>
+        <div.modal.fade id="modal">
+          <div.modal-dialog role="document">
+            <div.modal-content>
+              <div.modal-header>
+                <h5.modal-title id="modalTitle"> "Modal title"
+                <button.close data-dismiss="modal">
+              <div.modal-body>
+                <table.table>
+                  <thead>
+                    <tr>
+                      <th> "ID"
+                      <th> "Start Time"
+                      <th> "End Time"
+                      <th> "Score"
+                      <th> "Status"
+                  <tbody>
+                    for exe in @executions
+                      <tr>
+                        <th> exe:job_id
+                        <th> exe:startTime
+                        <th> exe:endTime
+                        <th> exe:score || exe:error
+                        <th> exe:status
+              <div.modal-footer>
+                <button.btn.btn-secondary data-dismiss="modal"> "Close"
         <p>
           "jump to page"
           <input[page] :change.crawl(@page)>
@@ -73,5 +111,3 @@ export tag SubmitRecords
                 <td> submit:status
                 <td>
                   <a.btn.btn-raised.btn-primary :tap.viewDetails(submit:submission_id) href="#col{submit:submission_id}"> "details"
-              <tr.collapse id="col{submit:submission_id}">
-                "veryLOOOOOOOOOOOOOOOOOOOOOOOOG"

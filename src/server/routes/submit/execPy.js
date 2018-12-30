@@ -1,3 +1,4 @@
+var config = require("../../../../config")(process.env.NODE_ENV);
 const Queue = require("bee-queue");
 const exec = require("await-exec");
 const { RuntimeError, MemoryError, TimeError } = require("./error");
@@ -8,7 +9,7 @@ const execPyQueue = new Queue("execPy", {
 });
 
 execPyQueue.on("ready", () => {
-  execPyQueue.process(async job => {
+  execPyQueue.process(config["queueCapacity"], async job => {
     let cmd = job.data.cmd;
     let input = job.data.input;
 

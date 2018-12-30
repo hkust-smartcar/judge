@@ -1,3 +1,4 @@
+var config = require("../../../../config")(process.env.NODE_ENV);
 const questions = require("../../../../questions.json");
 const Queue = require("bee-queue");
 const exec = require("await-exec");
@@ -22,7 +23,8 @@ const execCppQueue = require("./execCpp");
 const evaluate = require("./grade");
 
 jobQueue.on("ready", () => {
-  jobQueue.process(async job => {
+  console.log(config);
+  jobQueue.process(config["queueCapacity"], async job => {
     if (!job.data.files) {
       throw new MissingFieldError("Submit Files");
     }

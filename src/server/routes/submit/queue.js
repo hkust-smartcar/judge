@@ -51,11 +51,12 @@ jobQueue.on("ready", () => {
          * --quiet: No messages from firejail itself
          * --noprofile: Do not look for any predesigned firejail profiles
          * --net=none: No internet access
+         * --blacklist: Blacklist the solution file
          * --rlimit-as=: RAM limit in Bytes
          * --timeout=: Time out. For python, we need to add 3s for startup time.
          * python3: Run python3
          */
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=${memoryLim} --timeout=${timeLim} python3 ${
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} python3 ${
           file.path
         }`;
         queue = execPyQueue;
@@ -73,7 +74,7 @@ jobQueue.on("ready", () => {
         await exec(`rm ${file.path}.cpp`);
 
         logger.info("C++ compiled.");
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=${memoryLim} --timeout=${timeLim} ${
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json  --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} ${
           file.path
         }`;
         queue = execCppQueue;

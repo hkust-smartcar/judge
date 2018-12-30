@@ -16,7 +16,8 @@ const configs = {
       resave: false,
       saveUninitialized: false
     },
-    fileLimitSize: 100 //in kb
+    fileLimitSize: 100, //in kb
+    queueCapacity: 10
   },
   dev: {
     MODE: "dev",

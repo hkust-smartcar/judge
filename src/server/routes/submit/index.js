@@ -1,6 +1,13 @@
 const express = require("express");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: (process.config.fileSizeLimit || 100) * 1024 },
+  onFileSizeLimit: function(file) {
+    fs.unlink("./" + file.path); // delete the partially written file
+    file.failed = true;
+  }
+});
 const io = require("../../socket").getio();
 
 const router = express.Router();

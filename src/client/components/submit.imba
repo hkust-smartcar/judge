@@ -1,3 +1,5 @@
+import {snackbar} from '../lib/snackbar-factory'
+
 export tag Submit
   prop qid default:1
   prop temp_disable default: no
@@ -6,6 +8,15 @@ export tag Submit
     @temp_disable = yes
     Imba.setTimeout 2000 do
       @temp_disable = no
+
+  def validateFile e
+    console.log 'validate',e
+    let files = e:_event:target:files
+    if files:length >0
+      let size = files[0]:size
+      if size > (process:config:fileSizeLimit||100)*1000 # 100kb
+        e:_event:target:value = ''
+        snackbar 'File Size Exceed limit 100kb','alert'
 
   def render
     return 

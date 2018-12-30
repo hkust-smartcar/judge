@@ -210,7 +210,7 @@
         "points": 1,
         "dataset": [
           {
-            "input": "../question_data/2/hello.txt",
+            "input": "question_data/2/hello.txt",
             "output": "hi",
             "points": 1
           }

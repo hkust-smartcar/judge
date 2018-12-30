@@ -7,13 +7,15 @@
  * @param {Number[][]} modelAnswers model answer
  * @param {Number} maxScore maximum score
  * @param {Number} unmatchPenalty penalty for each unmatched points
+ * @param {Number} threshold if distance of two points is less than threshold, distance will be 0
  */
 
 const pointMatchLoss = (
   submittedAnswers,
   modelAnswers,
   maxScore,
-  unmatchPenalty = Math.sqrt(320 ** 2 + 240 ** 2)
+  unmatchPenalty = Math.sqrt(320 ** 2 + 240 ** 2),
+  threshold = 1
 ) => {
   const pairs = matchPair(submittedAnswers, modelAnswers);
   const numOfUnmatched = Math.abs(
@@ -22,7 +24,7 @@ const pointMatchLoss = (
   return (
     (1 -
       Math.tanh(
-        (pairs.reduce((prev, currv) => prev + dist(currv), 0) +
+        (pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) +
           numOfUnmatched * unmatchPenalty) /
           2000
       )) *
@@ -115,8 +117,15 @@ const matchPair = (res_, ans_) => {
  * L2 distance
  *
  * @param {Number[][]} param0 an edge denoted by array of points
+ * @param {Number} threshold if distance of two points is less than threshold, distance will be 0
  */
-const dist = ([[x0, y0], [x1, y1]]) =>
-  Math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2);
+const dist = ([[x0, y0], [x1, y1]], threshold = 0) => {
+  let d = Math.sqrt((x0 - x1) ** 2 + (y0 - y1) ** 2);
+  if (d <= threshold) {
+    return 0;
+  } else {
+    return d;
+  }
+};
 
 module.exports = { pointMatchLoss, matchPair };

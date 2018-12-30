@@ -23,6 +23,7 @@ export tag Index
           <li> "You code is runned by passing argument list"
           <li> "You code is graded by reading the standard output"
           <li> "Each problem has its own runtime limit and memory limit, please refer to question page"
+          <li> "No new line character at the output, this can lead to incorrect answer"
           <li> "If there is any problem with this judging system, please contact Dipsy"
 
         <LeaderBoard>

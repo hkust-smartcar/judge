@@ -32,7 +32,7 @@ tag App
 		return
 			<self>
 				<NavBar>
-				<div.container css:margin-top='10px'>
+				<div.container css:margin-top='4rem'>
 					<Index route='/'> 
 					<Profile route='/profile'>
 					<Submit route='/submit'>

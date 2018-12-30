@@ -26,7 +26,7 @@ const pointMatchLoss = (
       Math.tanh(
         (pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) +
           numOfUnmatched * unmatchPenalty) /
-          2000
+          100
       )) *
     maxScore
   );

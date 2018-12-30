@@ -169,7 +169,7 @@
     "subtasks": [
       {
         "id": 0,
-        "constraints": [],
+        "constraints": ["none"],
         "points": 100,
         "dataset": [
           {
@@ -181,6 +181,38 @@
             "input": "0037b.bmp",
             "output": "0",
             "points": 50
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "File IO",
+    "type": "IO",
+    "limits": {
+      "memory": 128,
+      "time": 1
+    },
+    "descriptions": ["Given path, return content of file"],
+    "input": "Path to file",
+    "output": "Content of file",
+    "examples": [
+      {
+        "input": "hello.txt",
+        "output": "hi"
+      }
+    ],
+    "subtasks": [
+      {
+        "id": 0,
+        "constraints": ["none"],
+        "points": 1,
+        "dataset": [
+          {
+            "input": "../question_data/2/hello.txt",
+            "output": "hi",
+            "points": 1
           }
         ]
       }

@@ -27,7 +27,7 @@ execCppQueue.on("ready", () => {
       }
     });
 
-    console.log(`stdout: ${output.stdout}`);
+    console.log(`stdout: ${output.stdout} }`);
     return output.stdout;
   });
 });

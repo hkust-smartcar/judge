@@ -1,5 +1,6 @@
 /**
  * @param {Array} ms maxscore api returned array
+ * @return {Array} [{uerid,questions,totalScores}]
  */
 module.exports = ms => {
   ms = ms.reduce((p, c, k) => {
@@ -8,7 +9,7 @@ module.exports = ms => {
     return p;
   }, {});
   ms = Object.keys(ms).map(uid => ({
-    _id: uid,
+    user_id: uid,
     questions: ms[uid],
     totalScores: Object.values(ms[uid]).reduce((p, c, k) => p + c, 0)
   }));

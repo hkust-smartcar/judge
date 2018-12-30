@@ -37,11 +37,8 @@ const evaluate = (pred, exp, type, maxScore) => {
           return resultArray;
         }, []);
       return pointMatchLoss(pred, exp, maxScore) || 0;
-      break;
     default:
       return (pred == exp) * maxScore;
-      // default as normal IO
-      break;
   }
 };
 

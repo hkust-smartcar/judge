@@ -15,7 +15,7 @@ const router = express.Router();
 
 const jobQueue = require("./queue");
 
-const { upsertSubmission } = require("./schema");
+const { upsertSubmission } = require("../schema");
 
 // router.use(bodyParser.json());
 // router.use(bodyParser.urlencoded({ extended: true }));
@@ -58,6 +58,7 @@ router
           type: "result",
           ...payload
         });
+        io.emit("scoreboard", payload);
         // Save in DB
         upsertSubmission(payload);
       })

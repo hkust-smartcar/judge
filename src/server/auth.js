@@ -2,6 +2,7 @@ const passport = require("passport");
 const express = require("express");
 const session = require("express-session");
 const logger = require("./logger")("passport");
+const { upsertUser } = require("./routes/schema");
 
 const init = app => {
   const oidc = process.config.oidc;
@@ -50,6 +51,7 @@ const init = app => {
       },
       (iss, sub, profile, jwtClaims, accessToken, refreshToken, params, cb) => {
         logger.info(profile && profile.displayName + " logged in");
+        upsertUser({ user_id: profile.id, displayName: profile.displayName });
         return cb(null, profile) || true;
       }
     )

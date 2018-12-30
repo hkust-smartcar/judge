@@ -19,14 +19,16 @@ export tag SubmitRecords
             console.log('ft',@submits)
         if data:subtask_id
           if @show == yes
-            if @exePage == 1
-              @executions = upsert(@executions,data,"job_id")
+            if data:submission_id == @sid
+              if @exePage == 1
+                @executions = upsert(@executions,data,"job_id")
       Imba.commit
 
     window:$("#modal").modal()
     @executions = []
     @show = no
     @exePage = 1
+    @sid = 0
 
   def crawl page
     var url = "/api/submits?page={page}"
@@ -39,11 +41,20 @@ export tag SubmitRecords
       @submits = data:submits
       console.log data
       Imba.commit
+
+  def crawlExe sid,page
+    var url = "/api/executions?submission_id={sid}&page={page}"
+    window:$.ajax({url: url}).done do |data|
+      @executions = data:executions
+      console.log data
+      Imba.commit
   
   def viewDetails sid
     console.log('view details',sid)
     window:$("#modal").modal('toggle')
     @show = yes
+    @sid = sid
+    crawlExe sid,1
 
   def modalClose
     @show = no
@@ -53,12 +64,15 @@ export tag SubmitRecords
     return 
       <self>
         <div.modal.fade id="modal">
-          <div.modal-dialog role="document">
+          <div.modal-dialog role="document" css:max-width="100%">
             <div.modal-content>
               <div.modal-header>
-                <h5.modal-title id="modalTitle"> "Modal title"
+                <h5.modal-title id="modalTitle"> "Execution Records of Submit {@sid}"
                 <button.close data-dismiss="modal">
               <div.modal-body>
+                <p>
+                  "Input Page Number"
+                  <input[@exePage] :change.crawlExe(@sid,@exePage)>
                 <table.table>
                   <thead>
                     <tr>
@@ -70,11 +84,14 @@ export tag SubmitRecords
                   <tbody>
                     for exe in @executions
                       <tr>
-                        <th> exe:job_id
-                        <th> exe:startTime
-                        <th> exe:endTime
-                        <th> exe:score || exe:error
-                        <th> exe:status
+                        <td> exe:job_id
+                        <td> moment(exe:startTime).format 'YYYY-MM-DD HH:mm:ss'
+                        <td> moment(exe:endTime).format 'YYYY-MM-DD HH:mm:ss'
+                        if exe:score !=undefined
+                          <td> exe:score
+                        else
+                          <td> exe:error
+                        <td> exe:status
               <div.modal-footer>
                 <button.btn.btn-secondary data-dismiss="modal"> "Close"
         <p>

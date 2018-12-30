@@ -3,6 +3,7 @@ const router = express.Router();
 const moment = require("moment");
 const { Submission, Execution } = require("../submit/schema");
 const { getSessionUser, isAdmin } = require("../helper");
+const logger = require("../../logger")("api");
 
 /**
  * Query execution details given a particular submission ID.
@@ -23,7 +24,7 @@ const queryExecutions = (submission_id, page = 1) => {
         return doc;
       })
       .catch(err => {
-        console.log(err);
+        logger.error(err);
       });
   else
     return Execution.find({ submission_id }, null, {
@@ -36,7 +37,7 @@ const queryExecutions = (submission_id, page = 1) => {
         return doc;
       })
       .catch(err => {
-        console.log(err);
+        logger.error(err);
       });
 };
 

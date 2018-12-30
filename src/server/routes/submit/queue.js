@@ -1,4 +1,5 @@
 var config = require("../../../../config")(process.env.NODE_ENV);
+const logger = require("../../logger")("queue");
 const questions = require("../../../../questions.json");
 const Queue = require("bee-queue");
 const exec = require("await-exec");
@@ -23,7 +24,6 @@ const execCppQueue = require("./execCpp");
 const evaluate = require("./grade");
 
 jobQueue.on("ready", () => {
-  console.log(config);
   jobQueue.process(config["queueCapacity"], async job => {
     if (!job.data.files) {
       throw new MissingFieldError("Submit Files");
@@ -36,7 +36,7 @@ jobQueue.on("ready", () => {
     let memoryLim = questions[qid]["limits"]["memory"] * 1024 * 1024; // Memory limit in byte
     let timeLim = sec2str(questions[qid]["limits"]["time"] + 3); // Time Limit in hh:mm:ss, plus 3 seconds of startup
 
-    console.log(`Processing job ${job.id} with name ${file.originalname}`);
+    logger.info(`Processing job ${job.id} with name ${file.originalname}`);
     let filetype = file.originalname.split(".").pop();
 
     let queue = undefined;
@@ -44,7 +44,7 @@ jobQueue.on("ready", () => {
 
     switch (filetype) {
       case "py": {
-        console.log("Handling a Python file.");
+        logger.info("Handling a Python file.");
         /**
          * firejail: sandbox
          * --overlay-tmpfs: Overlay a temporary filesystem which does not affect the real one
@@ -63,7 +63,7 @@ jobQueue.on("ready", () => {
       }
 
       case "cpp": {
-        console.log("Handling a C++ file.");
+        logger.info("Handling a C++ file.");
         await exec(`mv ${file.path} ${file.path}.cpp`);
         await exec(`g++ -std=c++11 ${file.path}.cpp -o ${file.path}`).catch(
           err => {
@@ -72,7 +72,7 @@ jobQueue.on("ready", () => {
         ); // compilation
         await exec(`rm ${file.path}.cpp`);
 
-        console.log("C++ compiled.");
+        logger.info("C++ compiled.");
         cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --rlimit-as=${memoryLim} --timeout=${timeLim} ${
           file.path
         }`;
@@ -93,10 +93,6 @@ jobQueue.on("ready", () => {
       for (dataset of subtask["dataset"]) {
         let output = dataset["output"];
         let maxScore = dataset["points"];
-
-        console.log(
-          `Handling input ${dataset["input"]} with output ${dataset["output"]}`
-        );
         // Create job
         const execJob = queue.createJob({
           cmd, // exec command
@@ -108,7 +104,6 @@ jobQueue.on("ready", () => {
         execJob
 
           .on("succeeded", function(result) {
-            console.log("completed job " + job.id + " result ", result);
             processedDataset++;
             try {
               score = evaluate(
@@ -122,6 +117,11 @@ jobQueue.on("ready", () => {
               score = null;
               error = e.message;
             }
+            logger.info(
+              `Completed job ${job.id}:${execJob.id} with input ${
+                execJob.data.input
+              }, output ${result}, expected ${output} and score ${score}.`
+            );
             totalScore += score;
             let payload = {
               user_id: parseInt(user),
@@ -165,7 +165,7 @@ jobQueue.on("ready", () => {
 
           // On job failure, emit socket
           .on("failed", err => {
-            console.log(`job failed with error ${err.message}.`);
+            logger.info(`job failed with error ${err.message}.`);
             processedDataset++;
             let payload = {
               user_id: parseInt(user),

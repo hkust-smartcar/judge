@@ -2,6 +2,7 @@ var config = require("../../../../config")(process.env.NODE_ENV);
 const Queue = require("bee-queue");
 const exec = require("await-exec");
 const { RuntimeError, MemoryError, TimeError } = require("./error");
+const logger = require("../../logger")("queue");
 
 const execPyQueue = new Queue("execPy", {
   removeOnSuccess: true,
@@ -20,15 +21,13 @@ execPyQueue.on("ready", () => {
       } else {
         // check error message from python output
         let errMsg = err.stderr.split("\n")[err.stderr.split("\n").length - 2];
-        console.log(errMsg);
+        logger.error(errMsg);
         // if message contains MemoryError, throw Memory Error
         if (errMsg.includes("MemoryError")) throw new MemoryError();
         // otherwise they are runtime errors
         else throw new RuntimeError();
       }
     });
-
-    console.log(`stdout: ${output.stdout}`);
     return output.stdout;
   });
 });

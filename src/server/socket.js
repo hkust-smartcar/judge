@@ -1,9 +1,11 @@
+const logger = require("./logger")("socket");
+
 let io;
 
 const init = s => {
   io = require("socket.io").listen(s);
   io.sockets.on("connection", socket => {
-    console.log(
+    logger.info(
       "connected",
       socket.id,
       socket.request.session.passport &&
@@ -17,15 +19,12 @@ const init = s => {
     ) {
       let user = socket.request.session.passport.user;
       // if logged in
-      // console.log('user',socket.request.session.passport)
       socket.join(user.id); // use user id as room id
       io.to(user.id).emit("name", `Welcome, ${user.displayName}`); // emit user name to channel "name"
     }
-    socket.on("chatRoom", data => {
-      console.log(data);
-      io.sockets.emit("chatRoom", data);
-    });
   });
+
+  logger.info("socket io init");
   return io;
 };
 

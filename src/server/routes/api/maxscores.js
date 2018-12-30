@@ -3,6 +3,7 @@ const router = express.Router();
 const moment = require("moment");
 const { Submission, Execution } = require("../submit/schema");
 const { getSessionUser, isAdmin } = require("../helper");
+const logger = require("../../logger")("api");
 
 /**
  * Query the maximum scores achieved of each question by user_id.
@@ -41,7 +42,7 @@ const queryMaxScores = user_id => {
         return doc;
       })
       .catch(err => {
-        console.log(err);
+        logger.error(err);
       });
   else
     return Submission.aggregate([
@@ -53,7 +54,7 @@ const queryMaxScores = user_id => {
         return doc;
       })
       .catch(err => {
-        console.log(err);
+        logger.error(err);
       });
 };
 

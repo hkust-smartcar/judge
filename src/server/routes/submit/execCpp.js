@@ -2,6 +2,7 @@ var config = require("../../../../config")(process.env.NODE_ENV);
 const Queue = require("bee-queue");
 const exec = require("await-exec");
 const { MemoryError, TimeError, RuntimeError } = require("./error");
+const logger = require("../../logger")("queue");
 
 const execCppQueue = new Queue("execCpp", {
   removeOnSuccess: true,
@@ -14,7 +15,7 @@ execCppQueue.on("ready", () => {
     let input = job.data.input;
 
     let output = await exec(cmd.concat(" ").concat(input)).catch(err => {
-      console.log(err);
+      logger.error(err);
       if (err.stderr.includes("std::bad_alloc")) {
         // C++ returns std::bad_alloc if new operators can no longer allocate memory
         // malloc should be fine because if no memory can be allocated, malloc returns NULL and
@@ -28,7 +29,6 @@ execCppQueue.on("ready", () => {
       }
     });
 
-    console.log(`stdout: ${output.stdout}`);
     return output.stdout;
   });
 });

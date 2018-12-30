@@ -1,6 +1,9 @@
 import {store} from '../lib/store'
 import {Submit} from '../components/submit'
 import {SubmitRecords} from '../components/submit-records'
+var prism = require('prismjs')
+require('prismjs/components/prism-python')
+require('prismjs/components/prism-clike')
 
 export tag Question
   prop qid
@@ -12,6 +15,8 @@ export tag Question
   def crawl qid
     window:$.ajax({url: "/api/questions/{qid}"}).done do |data|
       @question = data
+      @pyhtml = Prism.highlight(data:code:python, Prism:languages:python, 'python')
+      @cpphtml = Prism.highlight(data:code:cpp, Prism:languages:clike, 'clike')
       Imba.commit
 
   def render
@@ -23,6 +28,13 @@ export tag Question
           <h3> "Descriptions"
           for description in @question:descriptions
             <p> description
+          <h3> "Limits"
+          <p>
+            <b> "Memory: "
+            @question:limits:memory+'MB'
+          <p>
+            <b> "Time: "
+            @question:limits:time+'s'
           <h3> "Input"
           <p> @question:input
           <h3> "Output"
@@ -53,6 +65,13 @@ export tag Question
                       for con in st:constraints
                         <p> con
                     <td> st:points
+        <h3> "Code"
+        <h5> "Python"
+        <pre>
+          <code html=@pyhtml>
+        <h5> "C++"
+        <pre>
+          <code html=@cpphtml>
         <Submit qid=@qid>
         <SubmitRecords qid_filter=@qid>
 

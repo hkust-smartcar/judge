@@ -14,6 +14,7 @@ module.exports = env => ({
 		extensions: [".imba",".js", ".json"]
 	},
 	plugins: [
+		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		new webpack.DefinePlugin({
 			"process.config": JSON.stringify(configs(env && env.NODE_ENV || 'production'))
 		}),

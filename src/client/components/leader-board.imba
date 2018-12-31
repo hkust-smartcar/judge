@@ -36,14 +36,16 @@ export tag LeaderBoard
         <table.table>
           <thead>
             <tr>
+              <th> "Rank"
               <th> "UID"
               <th> "Name"
               <th> "Total"
               for q in @qids
                 <th> "Question {q}"
           <tbody>
-            for ms in  @maxscores
+            for ms,k in  @maxscores
               <tr>
+                <td> k+1
                 <td> ms:user_id
                 <td> @users[ms:user_id]
                 <td> ms:totalScores

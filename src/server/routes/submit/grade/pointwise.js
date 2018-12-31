@@ -18,16 +18,37 @@ const pointMatchLoss = (
   threshold = 7
 ) => {
   const pairs = matchPair(submittedAnswers, modelAnswers);
-  const numOfUnmatched = Math.abs(
-    submittedAnswers.length - modelAnswers.length
+  // distance map to score = clamp(0,k/(dist+d)^2,10)
+  // score inversely proportional to the distance, at max 10, at least 0, 10 until distance > 7
+  // drop to 0 when >17 (meaning less)
+  let k = 174,
+    c = -0.7,
+    d = -3.3;
+  let score = pairs.reduce(
+    (s, pair) => s + Math.min(Math.max(0, k / (dist(pair) + d) + c), 10),
+    0
   );
-  let score =
-    (1 -
-      Math.tanh(
-        pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) / 100
-      )) *
-    maxScore;
-  return Math.max(score - 10 * numOfUnmatched, 0);
+  const sl = submittedAnswers.length;
+  const ml = modelAnswers.length;
+  score += (sl == ml) * 7;
+  score += 3;
+  const miss = Math.max(ml - sl, 0);
+  const extra = Math.max(sl - ml, 0);
+  score -= extra * 5;
+  score = Math.max(score, 0);
+  score -= miss * 3;
+  return score;
+
+  // const numOfUnmatched = Math.abs(
+  //   submittedAnswers.length - modelAnswers.length
+  // );
+  // let score =
+  //   (1 -
+  //     Math.tanh(
+  //       pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) / 100
+  //     )) *
+  //   maxScore;
+  // return Math.max(score - 10 * numOfUnmatched, 0) + (numOfUnmatched == 0) * 10;
 };
 
 /**

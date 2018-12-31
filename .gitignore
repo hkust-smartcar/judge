@@ -40,5 +40,6 @@ uploads/
 questions.json
 questions (1).json
 questions-p.json
+questions-*.json
 
 *.bmp

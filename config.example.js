@@ -17,7 +17,8 @@ const configs = {
       saveUninitialized: false
     },
     fileLimitSize: 100, //in kb
-    queueCapacity: 10
+    queueCapacity: 10,
+    pythonPath: "python3"
   },
   dev: {
     MODE: "dev",

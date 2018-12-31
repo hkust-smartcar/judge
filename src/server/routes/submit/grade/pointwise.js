@@ -21,14 +21,13 @@ const pointMatchLoss = (
   const numOfUnmatched = Math.abs(
     submittedAnswers.length - modelAnswers.length
   );
-  return (
-    ((1 -
+  let score =
+    (1 -
       Math.tanh(
         pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) / 100
       )) *
-      maxScore) /
-    2 ** numOfUnmatched
-  );
+    maxScore;
+  return Math.max(score - 10 * numOfUnmatched, 0);
 };
 
 /**

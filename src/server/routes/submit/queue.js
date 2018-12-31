@@ -56,7 +56,7 @@ jobQueue.on("ready", () => {
          * --timeout=: Time out. For python, we need to add 3s for startup time.
          * python3: Run python3
          */
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} python3 ${
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} ${process.config.pythonPath} ${
           file.path
         }`;
         queue = execPyQueue;

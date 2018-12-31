@@ -72,8 +72,12 @@ export tag Question
         <h5> "C++"
         <pre>
           <code html=@cpphtml>
-        <Submit qid=@qid>
-        <SubmitRecords qid_filter=@qid>
+        if store:user
+          <Submit qid=@qid>
+          <SubmitRecords qid_filter=@qid>
+        else
+          <p> "Please login to submit"
+          <a.btn.btn-raised.btn-primary href="/login"> "Login"
 
 
 

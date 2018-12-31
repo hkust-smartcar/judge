@@ -15,7 +15,7 @@ const pointMatchLoss = (
   modelAnswers,
   maxScore,
   unmatchPenalty = Math.sqrt(320 ** 2 + 240 ** 2),
-  threshold = 2
+  threshold = 7
 ) => {
   const pairs = matchPair(submittedAnswers, modelAnswers);
   const numOfUnmatched = Math.abs(
@@ -27,7 +27,7 @@ const pointMatchLoss = (
         pairs.reduce((prev, currv) => prev + dist(currv, threshold), 0) / 100
       )) *
       maxScore) /
-    2 ** (numOfUnmatched)
+    2 ** numOfUnmatched
   );
 };
 

@@ -65,7 +65,7 @@ export tag Question
                       for con in st:constraints
                         <p> con
                     <td> st:points
-        <h3> "Code"
+        <h3> "Sample Code"
         <h5> "Python"
         <pre>
           <code html=@pyhtml>

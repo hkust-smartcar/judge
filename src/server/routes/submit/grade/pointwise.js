@@ -37,7 +37,7 @@ const pointMatchLoss = (
   score -= extra * 5;
   score = Math.max(score, 0);
   score -= miss * 3;
-  return score;
+  return { score, miss, extra, match: pairs.length };
 
   // const numOfUnmatched = Math.abs(
   //   submittedAnswers.length - modelAnswers.length

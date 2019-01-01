@@ -38,7 +38,7 @@ const evaluate = (pred, exp, type, maxScore) => {
         }, []);
       return pointMatchLoss(pred, exp, maxScore) || 0;
     default:
-      return (pred == exp) * maxScore;
+      return { score: (pred == exp) * maxScore };
   }
 };
 

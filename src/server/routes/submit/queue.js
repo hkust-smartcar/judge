@@ -56,9 +56,9 @@ jobQueue.on("ready", () => {
          * --timeout=: Time out. For python, we need to add 3s for startup time.
          * python3: Run python3
          */
-        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} ${process.config.pythonPath} ${
-          file.path
-        }`;
+        cmd = `firejail --overlay-tmpfs --quiet --noprofile --net=none --blacklist=~/judge/questions.json --blacklist=~/Documents/git/judge/questions.json --rlimit-as=${memoryLim} --timeout=${timeLim} ${
+          process.config.pythonPath
+        } ${file.path}`;
         queue = execPyQueue;
         break;
       }
@@ -86,6 +86,7 @@ jobQueue.on("ready", () => {
 
     let processedDataset = 0; // count number of dataset completed per subtask
     let totalScore = 0; // total score achieved in this submission
+    let totalAdditionalResult = {};
     let totalDataset = subtasks // total number of datasets
       .map(s => s["dataset"].length)
       .reduce((acc, cur) => acc + cur);
@@ -106,8 +107,10 @@ jobQueue.on("ready", () => {
 
           .on("succeeded", function(result) {
             processedDataset++;
+            // let score, additionalResult;
+            // let evaluatedResult = {}, additionalResult
             try {
-              score = evaluate(
+              var { score, ...additionalResult } = evaluate(
                 result,
                 output,
                 questions[qid]["type"],
@@ -124,6 +127,15 @@ jobQueue.on("ready", () => {
               }, output ${result}, expected ${output} and score ${score}.`
             );
             totalScore += score;
+            if (questions[qid]["type"] === "IOPointwise") {
+              for (let key in additionalResult) {
+                if (key in totalAdditionalResult) {
+                  totalAdditionalResult[key] += additionalResult[key];
+                } else {
+                  totalAdditionalResult[key] = additionalResult[key];
+                }
+              }
+            }
             let payload = {
               user_id: parseInt(user),
               submission_id: parseInt(job.id),
@@ -134,7 +146,8 @@ jobQueue.on("ready", () => {
               score,
               error,
               startTime: execJob.data.startTime,
-              endTime: Date.now()
+              endTime: Date.now(),
+              additionalResult
             };
 
             io.to(user).emit("alert", {
@@ -153,7 +166,8 @@ jobQueue.on("ready", () => {
                 status: "Completed",
                 score: totalScore,
                 startTime: job.data.startTime,
-                endTime: Date.now()
+                endTime: Date.now(),
+                additionalResult: totalAdditionalResult
               };
               io.to(user).emit("alert", {
                 type: "result",
@@ -161,6 +175,7 @@ jobQueue.on("ready", () => {
               });
 
               upsertSubmission(payload);
+              io.emit("scoreboard", payload);
             }
           })
 

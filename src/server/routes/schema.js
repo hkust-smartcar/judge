@@ -14,7 +14,8 @@ var submissionSchema = new mongoose.Schema({
   score: Number, // Score
   error: String, // Could be 'Compilation Error'
   startTime: Date,
-  endTime: Date
+  endTime: Date,
+  additionalResult: Object
 });
 
 var Submission = mongoose.model("Submission", submissionSchema);
@@ -48,7 +49,8 @@ var executionSchema = new mongoose.Schema({
   score: Number,
   error: String,
   startTime: Date,
-  endTime: Date
+  endTime: Date,
+  additionalResult: Object
 });
 
 var Execution = mongoose.model("Execution", executionSchema);

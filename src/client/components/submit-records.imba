@@ -22,7 +22,7 @@ export tag SubmitRecords
             # console.log('b4',@submits,data)
             @submits = upsert(@submits, data, "submission_id")
             # console.log('ft',@submits)
-        if data:subtask_id
+        if data:subtask_id != undefined
           if @show == yes
             if data:submission_id == @sid
               if @exePage == 1

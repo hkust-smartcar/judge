@@ -10,7 +10,7 @@ export tag Submit
       @temp_disable = no
 
   def validateFile e
-    console.log 'validate',e
+    # console.log 'validate',e
     let files = e:_event:target:files
     if files:length >0
       let size = files[0]:size

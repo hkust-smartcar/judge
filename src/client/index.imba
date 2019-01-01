@@ -47,7 +47,7 @@ tag App
 socket.on 'name' do |data|
 	console.log data
 socket.on 'alert' do |data|
-	console.log data
+	# console.log data
 	alertHandler data
 
 Imba.mount <App>

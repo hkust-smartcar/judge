@@ -12,9 +12,10 @@ const logger = require("../../logger")("api");
  * @param {Number} page Page number
  * @returns {Promise} Model.find promise
  */
-const queryExecutions = (submission_id, page = 1) => {
-  if (submission_id === undefined)
-    return Execution.find({}, null, {
+const queryExecutions = async (submission_id, page = 1) => {
+  let ret;
+  if (submission_id === undefined) {
+    ret = await Execution.find({}, null, {
       sort: { startTime: -1 },
       skip: 20 * (page - 1),
       limit: 20
@@ -26,8 +27,8 @@ const queryExecutions = (submission_id, page = 1) => {
       .catch(err => {
         logger.error(err);
       });
-  else
-    return Execution.find({ submission_id }, null, {
+  } else {
+    ret = await Execution.find({ submission_id }, null, {
       sort: { startTime: -1 },
       skip: 20 * (page - 1),
       limit: 20
@@ -39,6 +40,19 @@ const queryExecutions = (submission_id, page = 1) => {
       .catch(err => {
         logger.error(err);
       });
+  }
+  return ret;
+};
+
+const deleteAdditionalResultIfNotAdmin = (isadmin, ret) => {
+  if (!isadmin) {
+    //hide additionalResult if user is not admin
+    ret = ret.map(r => {
+      r.additionalResult = undefined;
+      return r;
+    });
+  }
+  return ret;
 };
 
 /**
@@ -66,7 +80,10 @@ router.route("/").get(async (req, res) => {
       });
     } else {
       res.json({
-        executions: await queryExecutions(submission_id, page),
+        executions: deleteAdditionalResultIfNotAdmin(
+          isAdmin(user),
+          await queryExecutions(submission_id, page)
+        ),
         page,
         totalPages: 20
       });

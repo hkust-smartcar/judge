@@ -42,4 +42,6 @@ questions (1).json
 questions-p.json
 questions-*.json
 
+question_data/*
+
 *.bmp

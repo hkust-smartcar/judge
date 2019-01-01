@@ -33,6 +33,7 @@ export tag SubmitRecords
     @executions = []
     @show = no
     @exePage = 1
+    @additionalResult = []
     @sid = 0
 
   def crawl page
@@ -55,14 +56,17 @@ export tag SubmitRecords
     var url = "/api/executions?submission_id={@sid}&page={@exePage}"
     window:$.ajax({url: url}).done do |data|
       @executions = data:executions
-      # console.log data
       Imba.commit
   
-  def viewDetails sid
+  def viewDetails sid, ar
     console.log('view details',sid)
     window:$("#modal").modal('toggle')
     @show = yes
     @sid = sid
+    if(ar != undefined )
+      @additionalResult = []
+      for key in Object.keys(ar)
+        @additionalResult.push({key: key, value: ar[key]})
     crawlExe sid,1
 
   def modalClose
@@ -94,6 +98,17 @@ export tag SubmitRecords
                 <h5.modal-title id="modalTitle"> "Execution Records of Submit {@sid}"
                 <button.close data-dismiss="modal">
               <div.modal-body>
+                if @additionalResult
+                  <table.table>
+                    <thead>
+                      <tr>
+                        for ar in @additionalResult
+                          <th> ar:key
+                    <tbody>
+                      <tr>
+                        for ar in @additionalResult
+                          <td> ar:value
+
                 <div css:display="flex" css:justify-content="space-between">
                   <p>
                     "Input Page Number"
@@ -159,7 +174,7 @@ export tag SubmitRecords
                   <td> Math:round(100*submit:score)/100
                 <td> submit:status
                 <td>
-                  <a.btn.btn-raised.btn-primary :tap.viewDetails(submit:submission_id) href="#col{submit:submission_id}"> "details"
+                  <a.btn.btn-raised.btn-primary :tap.viewDetails(submit:submission_id, submit:additionalResult) href="#col{submit:submission_id}"> "details"
                   
         <button.btn :tap.prevPage> "Prev"
         <button.btn :tap.nextPage> "Next"

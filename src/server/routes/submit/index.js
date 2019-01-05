@@ -58,6 +58,10 @@ router
           type: "result",
           ...payload
         });
+        io.to("admin").emit("admin", {
+          type: "result",
+          ...payload
+        });
         // Save in DB
         upsertSubmission(payload);
       })
@@ -78,6 +82,10 @@ router
           type: "result",
           ...payload
         });
+        io.to("admin").emit("admin", {
+          type: "result",
+          ...payload
+        });
         // Save in DB
         upsertSubmission(payload);
       })
@@ -92,6 +100,10 @@ router
           startTime: job.data.startTime
         };
         io.to(req.user.id).emit("alert", {
+          type: "result",
+          ...payload
+        });
+        io.to("admin").emit("admin", {
           type: "result",
           ...payload
         });

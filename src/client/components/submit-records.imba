@@ -10,10 +10,8 @@ export tag SubmitRecords
   prop useridfilter default: -1
   prop qid_filter default: -1
 
-  def setup
-    crawl 1
-    store:socket.on 'alert' do |data|
-      if qid_filter != -1
+  def handler data
+    if qid_filter != -1
         if qid_filter != data:question_id
           return
       if data:type == 'result'
@@ -28,6 +26,15 @@ export tag SubmitRecords
               if @exePage == 1
                 @executions = upsert(@executions,data,"job_id")
       Imba.commit
+
+  def setup
+    crawl 1
+    store:socket.on 'alert' do |data|
+      handler data
+
+    if isAdmin
+      store:socket.on 'admin' do |data|
+        handler data
 
     window:$("#modal").modal()
     @executions = []

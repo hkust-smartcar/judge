@@ -1,4 +1,5 @@
 const logger = require("./logger")("socket");
+const { isAdmin } = require("./routes/helper");
 
 let io;
 
@@ -21,6 +22,12 @@ const init = s => {
       // if logged in
       socket.join(user.id); // use user id as room id
       io.to(user.id).emit("name", `Welcome, ${user.displayName}`); // emit user name to channel "name"
+      if (
+        (isAdmin(user), socket.request.headers.referer.indexOf("admin") !== -1)
+      ) {
+        socket.join("admin");
+        socket.emit("name", "joined admin channel");
+      }
     }
   });
 

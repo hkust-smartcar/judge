@@ -155,6 +155,11 @@ jobQueue.on("ready", () => {
               ...payload
             });
 
+            io.to("admin").emit("admin", {
+              type: "result",
+              ...payload
+            });
+
             saveExecution(payload);
 
             // if this is the last execution in the submission
@@ -170,6 +175,11 @@ jobQueue.on("ready", () => {
                 additionalResult: totalAdditionalResult
               };
               io.to(user).emit("alert", {
+                type: "result",
+                ...payload
+              });
+
+              io.to("admin").emit("admin", {
                 type: "result",
                 ...payload
               });
@@ -200,6 +210,11 @@ jobQueue.on("ready", () => {
               ...payload
             });
 
+            io.to("admin").emit("admin", {
+              type: "result",
+              ...payload
+            });
+
             saveExecution(payload);
 
             // if this is the last execution in the submission
@@ -214,6 +229,10 @@ jobQueue.on("ready", () => {
                 endTime: Date.now()
               };
               io.to(user).emit("alert", {
+                type: "result",
+                ...payload
+              });
+              io.to("admin").emit("admin", {
                 type: "result",
                 ...payload
               });

@@ -31,5 +31,5 @@ export tag Submit
               <span.bmd-help> "hi"
             
             <div.col-sm>
-              <input.btn type="file" name="myfile" :change.validateFile accept=".cpp,.py">
+              <input.btn type="file" name="myfile" :change.validateFile accept=".cpp,.py" required>
             <button.btn.btn-raised.btn-primary disabled=@temp_disable :tap.submit> "submit"

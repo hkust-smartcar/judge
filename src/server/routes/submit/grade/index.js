@@ -17,8 +17,13 @@ const evaluate = (pred, exp, type, maxScore) => {
         logger.info("Submission has wrong format.");
         throw new WrongInputFormat();
       }
+      pred = pred.split(" "); // split by space
+
+      if (Number(pred[0]) != (pred.length - 1) / 2) {
+        throw new WrongInputFormat();
+      }
+
       pred = pred
-        .split(" ") // split by space
         .splice(1) // remove the first element since it represents the number of points
         .reduce((resultArray, item, index) => {
           // group by twos

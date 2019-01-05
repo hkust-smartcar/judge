@@ -11,13 +11,14 @@ export tag LeaderBoard
     window:$.ajax({url: "/api/questions"}).done do |data|
       @qids = data.map(|d| d:id)
     window:$.ajax({url: "/api/users"}).done do |data|
-      data.forEach(|d| @users[d:user_id]=[d:displayName])
+      data.forEach(|d| @users[d:user_id]=d:displayName)
       Imba.commit
     store:socket.on "scoreboard" do |submit|
       console.log "onscoreboard",submit
       crawl @page
       window:$.ajax({url: "/api/users?user_id={submit:user_id}"}).done do |data|
-        data.forEach(|d| @users[d:user_id]=[d:displayName])
+        data.forEach(|d| @users[d:user_id]=d:displayName)
+        console.log(@users)
         Imba.commit
     
   def crawl page

@@ -27,4 +27,4 @@ export tag Index
           <li> "Strip all line break characters in your output. Otherwise, it may be treated as incorrect."
           <li> "If there is any problem with this judging system, please contact Dipsy."
 
-        <LeaderBoard>
+        <LeaderBoard isAdmin=yes>

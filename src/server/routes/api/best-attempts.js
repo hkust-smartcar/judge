@@ -43,7 +43,11 @@ router.route("/").get(async (req, res) => {
   if (question_id === undefined)
     res.json({ error: "question_id field is required" });
   if (user_id !== undefined) {
-    return res.json(await getBestAttemptByUidQid(user_id, question_id));
+    return res.json(
+      (await getBestAttemptByUidQid(user_id, question_id)) || {
+        message: "never attempted"
+      }
+    );
   } else {
     return res.json(await querySubmits(question_id));
   }

@@ -44,7 +44,7 @@
     "imba": "^1.4.0",
     "imba-router": "^0.2.0",
     "log4js": "^6.4.0",
-    "moment": "^2.23.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.1.13",
     "mongoose": "^5.7.5",
     "multer": "^1.4.1",

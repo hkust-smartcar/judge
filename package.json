@@ -59,7 +59,7 @@
   "devDependencies": {
     "concurrently": "4.1.0",
     "cross-env": "^5.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "nodemon": "^1.17.4",
     "webpack-cli": "^3.1.2"
   }
